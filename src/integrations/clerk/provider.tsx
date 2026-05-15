@@ -24,7 +24,10 @@ export default function AppClerkProvider({
     }
     throw new Error(
       'VITE_CLERK_PUBLISHABLE_KEY is required in production. ' +
-        'Set it via `wrangler secret put VITE_CLERK_PUBLISHABLE_KEY`.',
+        'Vite inlines VITE_* vars at build time, so this must be set as a ' +
+        'BUILD-TIME variable, not a runtime secret. In Cloudflare Workers ' +
+        'Build: dashboard → Workers & Pages → <worker> → Settings → Build → ' +
+        'Variables and Secrets. See docs/deploy.md.',
     )
   }
 
