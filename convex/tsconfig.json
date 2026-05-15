@@ -18,7 +18,10 @@
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "isolatedModules": true,
-    "noEmit": true
+    "noEmit": true,
+
+    /* Convex runtime exposes process.env (e.g. in auth.config.ts) */
+    "types": ["node"]
   },
   "include": ["./**/*"],
   "exclude": ["./_generated"]
