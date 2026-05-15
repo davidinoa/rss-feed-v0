@@ -1,21 +1,16 @@
-import {
-  SignedIn,
-  SignInButton,
-  SignedOut,
-  UserButton,
-} from '@clerk/clerk-react'
+import { Show, SignInButton, UserButton } from '@clerk/react'
 import { isClerkConfigured } from './provider'
 
 export default function HeaderUser() {
   if (!isClerkConfigured) return null
   return (
     <>
-      <SignedIn>
+      <Show when="signed-in">
         <UserButton />
-      </SignedIn>
-      <SignedOut>
+      </Show>
+      <Show when="signed-out">
         <SignInButton />
-      </SignedOut>
+      </Show>
     </>
   )
 }
