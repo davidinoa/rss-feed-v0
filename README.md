@@ -41,7 +41,7 @@ items off as you finish them; add new ones as integrations grow.
 
 ### Clerk
 
-- [ ] Create an app at [clerk.com](https://clerk.com) and set
+- [x] Create an app at [clerk.com](https://clerk.com) and set
       `VITE_CLERK_PUBLISHABLE_KEY` in `.env.local`
 - [ ] Migrate `@clerk/clerk-react` (deprecated, warns on install) →
       `@clerk/react`
@@ -52,11 +52,11 @@ items off as you finish them; add new ones as integrations grow.
 
 ### Convex
 
-- [ ] Run `pnpm convex:dev` to provision a deployment (auto-writes
+- [x] Run `pnpm convex:dev` to provision a deployment (auto-writes
       `VITE_CONVEX_URL` to `.env.local`, generates `convex/_generated/`)
-- [ ] In Clerk dashboard: create a JWT template named `convex`, copy the
+- [x] In Clerk dashboard: create a JWT template named `convex`, copy the
       issuer URL
-- [ ] In Convex dashboard: set `CLERK_JWT_ISSUER_DOMAIN` to that issuer URL,
+- [x] In Convex dashboard: set `CLERK_JWT_ISSUER_DOMAIN` to that issuer URL,
       then restart `pnpm convex:dev`
 - [ ] Migrate `/feeds`, `/timeline`, `/feeds/add` from mock
       `src/lib/feeds.ts` to `convexQuery(api.feeds.list, …)` /
@@ -68,16 +68,20 @@ items off as you finish them; add new ones as integrations grow.
 ### Cloudflare Workers
 
 - [ ] Per machine: `pnpm dlx wrangler login`
-- [ ] Push secrets:
-      `pnpm dlx wrangler secret put VITE_CLERK_PUBLISHABLE_KEY`
-      (repeat for `VITE_CONVEX_URL` and any others you add)
+- [x] Set `VITE_*` vars as **Cloudflare Build variables**
+      (dashboard → Settings → Build → *Build variables and secrets*) —
+      NOT `wrangler secret put`, which is runtime-only and won't reach
+      `vite build`. See `docs/deploy.md` for the full gotcha.
 - [ ] Configure custom domain under Workers → your worker → Triggers
+- [ ] Disable public `*.workers.dev` URL once a custom domain is live:
+      add `"workers_dev": false` and `"preview_urls": false` to
+      `wrangler.jsonc`
 - [ ] After binding changes (KV / D1 / R2 / Durable Objects / Queues):
       `pnpm cf-typegen`
 
 ### CodeRabbit
 
-- [ ] Push the repo to GitHub
+- [x] Push the repo to GitHub
 - [ ] Install the [CodeRabbit GitHub App](https://github.com/apps/coderabbitai)
       on the repo or org
 - [ ] Tune `.coderabbit.yaml` `path_instructions` as the codebase grows
@@ -242,12 +246,21 @@ pnpm dlx wrangler login        # one-time auth
 pnpm deploy                    # build + wrangler deploy
 ```
 
-For production secrets (e.g. the Clerk publishable key, plus any backend
-secrets you add):
+### Production env vars
 
-```bash
-pnpm dlx wrangler secret put VITE_CLERK_PUBLISHABLE_KEY
-```
+Two categories with different homes:
+
+- **Build-time** (`VITE_*`) — Vite inlines these into the bundle during
+  `vite build`. Set them in the Cloudflare dashboard under
+  *Settings → Build → Build variables and secrets*, **not** via
+  `wrangler secret put`. The Worker runtime never sees them; the values
+  are already baked into the deployed JS.
+- **Runtime** (anything your Worker reads via `env.MY_VAR`) — use
+  `pnpm dlx wrangler secret put MY_VAR` or the dashboard's
+  *Settings → Variables and Secrets*.
+
+See `docs/deploy.md` for the full flow and a debug-log story of what
+happens when you put a `VITE_*` var in the runtime section by mistake.
 
 After adding bindings (KV, D1, R2, Durable Objects, queues) in `wrangler.jsonc`,
 regenerate the types:
