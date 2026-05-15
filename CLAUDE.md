@@ -16,6 +16,10 @@ Canonical defaults (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-
 
 Single-context (one `CONTEXT.md` + `docs/adr/` at the repo root). See `docs/agents/domain.md`.
 
+## Deployment
+
+Cloudflare Workers via Workers Build (GitHub integration). `VITE_*` env vars are **build-time inlined** — set them as build-time variables in the Cloudflare dashboard, not as `wrangler secret put` runtime secrets. See [`docs/deploy.md`](docs/deploy.md) for the full flow, gotchas, and warning explanations.
+
 ## Commit conventions
 
 All commits in this repo **must** follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). Enforced by a `commit-msg` hook (`commitlint` + `simple-git-hooks`) — non-conforming messages are rejected.
@@ -29,3 +33,17 @@ Allowed types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `buil
 - Wrap the body at ~72 chars; explain the *why*, not the *what*.
 
 Examples: `feat(feeds): add OPML import`, `fix(timeline): handle empty entry list`, `chore: bump pnpm to 9.16`.
+
+<!-- convex-ai-start -->
+
+This project uses [Convex](https://convex.dev) as its backend.
+
+When working on Convex code, **always read
+`convex/_generated/ai/guidelines.md` first** for important guidelines on
+how to correctly use Convex APIs and patterns. The file contains rules that
+override what you may have learned about Convex from training data.
+
+Convex agent skills for common tasks can be installed by running
+`npx convex ai-files install`.
+
+<!-- convex-ai-end -->
