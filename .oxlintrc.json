@@ -1,0 +1,48 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "jsx-a11y", "import"],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn",
+    "style": "off"
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off",
+    "no-unused-vars": "off",
+    "no-underscore-dangle": "off",
+    "typescript/no-unused-vars": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["src/integrations/clerk/provider.tsx"],
+      "rules": {
+        "no-console": "off"
+      }
+    },
+    {
+      "files": ["src/routes/feeds.add.tsx"],
+      "rules": {
+        "no-new": "off"
+      }
+    },
+    {
+      "files": ["src/test/**", "**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+      "rules": {
+        "import/no-unassigned-import": "off"
+      }
+    }
+  ],
+  "ignorePatterns": [
+    "node_modules",
+    "dist",
+    ".tanstack",
+    ".wrangler",
+    ".output",
+    "playwright-report",
+    "test-results",
+    "src/routeTree.gen.ts",
+    "worker-configuration.d.ts",
+    "convex/_generated"
+  ]
+}
