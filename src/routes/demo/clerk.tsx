@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SignIn, SignedIn, SignedOut, useUser } from '@clerk/clerk-react'
+import { SignIn, Show, useUser } from '@clerk/react'
 import { isClerkConfigured } from '../../integrations/clerk/provider'
 
 export const Route = createFileRoute('/demo/clerk')({
@@ -42,7 +42,7 @@ function ClerkDemo() {
   return (
     <div className="flex justify-center py-10 px-4">
       <div className="w-full max-w-md p-6 space-y-6">
-        <SignedOut>
+        <Show when="signed-out">
           <div className="space-y-1.5">
             <h1 className="text-lg font-semibold leading-none tracking-tight">
               Sign in to continue
@@ -67,11 +67,11 @@ function ClerkDemo() {
             </a>
             .
           </p>
-        </SignedOut>
+        </Show>
 
-        <SignedIn>
+        <Show when="signed-in">
           <SignedInGreeting />
-        </SignedIn>
+        </Show>
       </div>
     </div>
   )

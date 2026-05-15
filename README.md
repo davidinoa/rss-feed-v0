@@ -43,10 +43,12 @@ items off as you finish them; add new ones as integrations grow.
 
 - [x] Create an app at [clerk.com](https://clerk.com) and set
       `VITE_CLERK_PUBLISHABLE_KEY` in `.env.local`
-- [ ] Migrate `@clerk/clerk-react` (deprecated, warns on install) →
+- [x] Migrate `@clerk/clerk-react` (deprecated, warns on install) →
       `@clerk/react`
 - [ ] When it leaves beta: switch to `@clerk/tanstack-react-start` for
-      server-side `auth()` and `clerkMiddleware`
+      server-side `auth()` and `clerkMiddleware` — see
+      [ADR-0001](docs/adr/0001-clerk-react-not-tanstack-react-start.md)
+      for the deferral rationale and revisit triggers
 - [ ] Production: swap test keys for production keys, configure the
       production domain, and enable any social providers (Google, GitHub, …)
 
@@ -127,9 +129,10 @@ move past the scaffold stage.
 
 ## Authentication (Clerk)
 
-The CLI wired in `@clerk/clerk-react`. The provider wraps the app in
-`src/integrations/clerk/provider.tsx` and the header swaps `SignInButton` ↔
-`UserButton` based on auth state.
+The provider wraps the app in `src/integrations/clerk/provider.tsx`
+(`@clerk/react@6`, GA) and the header swaps `SignInButton` ↔ `UserButton`
+based on auth state via `<Show when="signed-in">` /
+`<Show when="signed-out">`.
 
 ### Setup
 
@@ -144,17 +147,17 @@ The CLI wired in `@clerk/clerk-react`. The provider wraps the app in
 ### Protect a route
 
 ```tsx
-import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/clerk-react'
+import { Show, RedirectToSignIn } from '@clerk/react'
 
 function ProtectedPage() {
   return (
     <>
-      <SignedIn>
+      <Show when="signed-in">
         <YourPageContent />
-      </SignedIn>
-      <SignedOut>
+      </Show>
+      <Show when="signed-out">
         <RedirectToSignIn />
-      </SignedOut>
+      </Show>
     </>
   )
 }
