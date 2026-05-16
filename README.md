@@ -95,13 +95,15 @@ items off as you finish them; add new ones as integrations grow.
 
 ### Playwright
 
-- [ ] Per machine: `pnpm dlx playwright install chromium`
-- [ ] Expand `e2e/` coverage beyond the smoke specs as routes settle
+- [x] Per machine: `pnpm dlx playwright install chromium`
+      (CI handles this automatically in the `e2e` job)
+- [x] Smoke specs cover home / timeline / feeds / add-feed-validation;
+      expanding alongside new routes is normal dev work, not a tracked todo
 
 ### Vitest
 
-- [ ] Expand unit coverage as components and helpers stabilize (current
-      coverage: `src/lib/feeds.test.ts`)
+- [x] Baseline spec in `src/lib/feeds.test.ts`; further unit coverage
+      grows alongside new components and helpers, not a tracked todo
 
 ### TanStack
 
