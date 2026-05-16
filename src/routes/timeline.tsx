@@ -28,8 +28,10 @@ function Timeline() {
   return (
     <main className="page-wrap px-4 py-10">
       <header className="mb-8">
-        <p className="island-kicker mb-2">Unified timeline</p>
-        <h1 className="display-title text-3xl font-bold text-[var(--sea-ink)] sm:text-4xl">
+        <p className="text-muted-foreground mb-2 text-xs font-bold uppercase tracking-widest">
+          Unified timeline
+        </p>
+        <h1 className="text-foreground text-3xl font-bold sm:text-4xl">
           Latest from your subscriptions
         </h1>
       </header>
@@ -38,15 +40,15 @@ function Timeline() {
         {articles.map((a) => (
           <li
             key={a.id}
-            className="island-shell rounded-2xl p-5 transition hover:-translate-y-0.5"
+            className="border-border bg-card rounded-2xl border p-5 shadow-sm transition"
           >
             <div className="mb-2 flex items-center justify-between gap-3 text-xs">
-              <span className="font-semibold text-[var(--sea-ink)]">
+              <span className="text-foreground font-semibold">
                 {a.feedTitle}
               </span>
               <time
                 dateTime={a.publishedAt}
-                className="text-[var(--sea-ink-soft)]"
+                className="text-muted-foreground"
               >
                 {relativeTime(a.publishedAt)}
               </time>
@@ -55,11 +57,11 @@ function Timeline() {
               href={a.url}
               target="_blank"
               rel="noreferrer"
-              className="block text-base font-semibold text-[var(--sea-ink)] no-underline hover:underline"
+              className="text-foreground block text-base font-semibold no-underline hover:underline"
             >
               {a.title}
             </a>
-            <p className="m-0 mt-1.5 text-sm text-[var(--sea-ink-soft)]">
+            <p className="text-muted-foreground m-0 mt-1.5 text-sm">
               {a.excerpt}
             </p>
           </li>

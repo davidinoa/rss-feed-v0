@@ -7,19 +7,21 @@ export const Route = createFileRoute('/about')({
 function About() {
   return (
     <main className="page-wrap px-4 py-12">
-      <section className="island-shell rounded-2xl p-6 sm:p-8">
-        <p className="island-kicker mb-2">About</p>
-        <h1 className="display-title mb-3 text-4xl font-bold text-[var(--sea-ink)] sm:text-5xl">
+      <section className="border-border bg-card rounded-2xl border p-6 shadow-sm sm:p-8">
+        <p className="text-muted-foreground mb-2 text-xs font-bold uppercase tracking-widest">
+          About
+        </p>
+        <h1 className="text-foreground mb-3 text-4xl font-bold sm:text-5xl">
           A reader you can shape to your habits.
         </h1>
-        <p className="mb-4 max-w-3xl text-base leading-8 text-[var(--sea-ink-soft)]">
+        <p className="text-muted-foreground mb-4 max-w-3xl text-base leading-8">
           rss-feed-v0 is a starter for building a personal RSS reader. The
           subscriptions, categories, and timeline you see are stand-ins for your
           own data model — swap the mock <code>src/lib/feeds.ts</code> out for a
           real feed fetcher, persist subscriptions to your preferred store, and
           ship to Cloudflare Workers when you're ready.
         </p>
-        <ul className="m-0 list-disc space-y-2 pl-5 text-sm text-[var(--sea-ink-soft)]">
+        <ul className="text-muted-foreground m-0 list-disc space-y-2 pl-5 text-sm">
           <li>TanStack Start handles SSR and server functions.</li>
           <li>TanStack Router gives you type-safe routes and loaders.</li>
           <li>TanStack Query manages fetching, caching, and hydration.</li>

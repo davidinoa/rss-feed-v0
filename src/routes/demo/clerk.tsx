@@ -9,20 +9,22 @@ export const Route = createFileRoute('/demo/clerk')({
 function ClerkDemo() {
   if (!isClerkConfigured) {
     return (
-      <div className="flex justify-center py-10 px-4">
-        <div className="island-shell w-full max-w-md rounded-2xl p-6 space-y-3">
-          <p className="island-kicker">Clerk demo</p>
-          <h1 className="text-lg font-semibold text-[var(--sea-ink)]">
+      <div className="flex justify-center px-4 py-10">
+        <div className="border-border bg-card w-full max-w-md space-y-3 rounded-2xl border p-6 shadow-sm">
+          <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">
+            Clerk demo
+          </p>
+          <h1 className="text-foreground text-lg font-semibold">
             Authentication is not configured yet
           </h1>
-          <p className="text-sm text-[var(--sea-ink-soft)]">
+          <p className="text-muted-foreground text-sm">
             Add your Clerk publishable key to <code>.env.local</code> and
             restart the dev server:
           </p>
-          <pre className="rounded-lg border border-[var(--line)] bg-[var(--chip-bg)] p-3 text-xs">
+          <pre className="border-border bg-secondary rounded-lg border p-3 text-xs">
             {`VITE_CLERK_PUBLISHABLE_KEY=pk_test_...`}
           </pre>
-          <p className="text-xs text-[var(--sea-ink-soft)]">
+          <p className="text-muted-foreground text-xs">
             Get a key from{' '}
             <a
               href="https://dashboard.clerk.com"
@@ -40,14 +42,14 @@ function ClerkDemo() {
   }
 
   return (
-    <div className="flex justify-center py-10 px-4">
-      <div className="w-full max-w-md p-6 space-y-6">
+    <div className="flex justify-center px-4 py-10">
+      <div className="w-full max-w-md space-y-6 p-6">
         <Show when="signed-out">
           <div className="space-y-1.5">
             <h1 className="text-lg font-semibold leading-none tracking-tight">
               Sign in to continue
             </h1>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            <p className="text-muted-foreground text-sm">
               Clerk renders the sign-in UI, manages sessions, and handles social
               providers for you.
             </p>
@@ -55,13 +57,13 @@ function ClerkDemo() {
           <div className="flex justify-center pt-2">
             <SignIn routing="hash" />
           </div>
-          <p className="text-xs text-center text-neutral-400 dark:text-neutral-500">
+          <p className="text-muted-foreground text-center text-xs">
             Built with{' '}
             <a
               href="https://clerk.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium hover:text-neutral-600 dark:hover:text-neutral-300"
+              className="hover:text-foreground font-medium"
             >
               CLERK
             </a>
@@ -90,7 +92,7 @@ function SignedInGreeting() {
         <h1 className="text-lg font-semibold leading-none tracking-tight">
           Welcome back
         </h1>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400">
+        <p className="text-muted-foreground text-sm">
           You're signed in as {email}
         </p>
       </div>
@@ -99,29 +101,27 @@ function SignedInGreeting() {
         {user.imageUrl ? (
           <img src={user.imageUrl} alt="" className="h-10 w-10 rounded-full" />
         ) : (
-          <div className="h-10 w-10 bg-neutral-200 dark:bg-neutral-800 flex items-center justify-center rounded-full">
-            <span className="text-sm font-medium text-neutral-600 dark:text-neutral-400">
+          <div className="bg-muted flex h-10 w-10 items-center justify-center rounded-full">
+            <span className="text-muted-foreground text-sm font-medium">
               {initial}
             </span>
           </div>
         )}
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium truncate">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">
             {user.firstName} {user.lastName}
           </p>
-          <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate">
-            {email}
-          </p>
+          <p className="text-muted-foreground truncate text-xs">{email}</p>
         </div>
       </div>
 
-      <p className="text-xs text-center text-neutral-400 dark:text-neutral-500">
+      <p className="text-muted-foreground text-center text-xs">
         Manage your account from the avatar in the header. Built with{' '}
         <a
           href="https://clerk.com"
           target="_blank"
           rel="noopener noreferrer"
-          className="font-medium hover:text-neutral-600 dark:hover:text-neutral-300"
+          className="hover:text-foreground font-medium"
         >
           CLERK
         </a>

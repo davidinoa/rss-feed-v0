@@ -2,64 +2,70 @@ import { Link } from '@tanstack/react-router'
 import ClerkHeader from '../integrations/clerk/header-user.tsx'
 import ThemeToggle from './ThemeToggle'
 
+const navLinkBase =
+  'text-muted-foreground hover:text-foreground transition-colors'
+const navLinkActive = 'text-foreground font-semibold'
+
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[var(--header-bg)] px-4 backdrop-blur-lg">
+    <header className="border-border bg-background/80 sticky top-0 z-50 border-b px-4 backdrop-blur-lg">
       <nav className="page-wrap flex flex-wrap items-center gap-x-3 gap-y-2 py-3 sm:py-4">
         <h2 className="m-0 flex-shrink-0 text-base font-semibold tracking-tight">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-sm text-[var(--sea-ink)] no-underline shadow-[0_8px_24px_rgba(30,90,72,0.08)] sm:px-4 sm:py-2"
+            className="border-border bg-card text-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm no-underline shadow-sm sm:px-4 sm:py-2"
           >
-            <span className="h-2 w-2 rounded-full bg-[linear-gradient(90deg,#56c6be,#7ed3bf)]" />
+            <span className="bg-primary h-2 w-2 rounded-full" />
             rss-feed-v0
           </Link>
         </h2>
 
-        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm font-semibold sm:order-none sm:w-auto sm:flex-nowrap sm:pb-0">
+        <div className="order-3 flex w-full flex-wrap items-center gap-x-4 gap-y-1 pb-1 text-sm sm:order-none sm:w-auto sm:flex-nowrap sm:pb-0">
           <Link
             to="/"
-            className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            className={navLinkBase}
+            activeProps={{ className: navLinkActive }}
             activeOptions={{ exact: true }}
           >
             Home
           </Link>
           <Link
             to="/timeline"
-            className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            className={navLinkBase}
+            activeProps={{ className: navLinkActive }}
           >
             Timeline
           </Link>
           <Link
             to="/feeds"
-            className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            className={navLinkBase}
+            activeProps={{ className: navLinkActive }}
           >
             Feeds
           </Link>
           <Link
             to="/about"
-            className="nav-link"
-            activeProps={{ className: 'nav-link is-active' }}
+            className={navLinkBase}
+            activeProps={{ className: navLinkActive }}
           >
             About
           </Link>
           <details className="relative w-full sm:w-auto">
-            <summary className="nav-link list-none cursor-pointer">
+            <summary
+              className={`${navLinkBase} list-none cursor-pointer`}
+            >
               Demos
             </summary>
-            <div className="mt-2 min-w-56 rounded-xl border border-[var(--line)] bg-[var(--header-bg)] p-2 shadow-lg sm:absolute sm:right-0">
+            <div className="border-border bg-popover mt-2 min-w-56 rounded-xl border p-2 shadow-lg sm:absolute sm:right-0">
               <Link
                 to="/demo/clerk"
-                className="block rounded-lg px-3 py-2 text-sm text-[var(--sea-ink-soft)] no-underline transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
+                className="text-muted-foreground hover:bg-accent hover:text-foreground block rounded-lg px-3 py-2 text-sm no-underline transition"
               >
                 Clerk
               </Link>
               <Link
                 to="/demo/convex"
-                className="block rounded-lg px-3 py-2 text-sm text-[var(--sea-ink-soft)] no-underline transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
+                className="text-muted-foreground hover:bg-accent hover:text-foreground block rounded-lg px-3 py-2 text-sm no-underline transition"
               >
                 Convex
               </Link>
@@ -72,7 +78,7 @@ export default function Header() {
             href="https://github.com/TanStack"
             target="_blank"
             rel="noreferrer"
-            className="hidden rounded-xl p-2 text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)] sm:block"
+            className="text-muted-foreground hover:bg-accent hover:text-foreground hidden rounded-xl p-2 transition sm:block"
           >
             <span className="sr-only">Go to TanStack GitHub</span>
             <svg viewBox="0 0 16 16" aria-hidden="true" width="24" height="24">
