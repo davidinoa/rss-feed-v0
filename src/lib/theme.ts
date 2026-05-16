@@ -19,15 +19,30 @@ export function nextMode(current: ThemeMode): ThemeMode {
 
 export function getStoredMode(): ThemeMode {
   if (typeof window === 'undefined') return 'auto'
-  const stored = window.localStorage.getItem(STORAGE_KEY)
-  if (stored === 'light' || stored === 'dark' || stored === 'auto') {
-    return stored
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY)
+    if (stored === 'light' || stored === 'dark' || stored === 'auto') {
+      return stored
+    }
+  } catch {
+    // Restricted contexts (private mode, sandboxed iframe) can throw SecurityError.
   }
   return 'auto'
 }
 
 export function applyTheme(mode: ThemeMode): void {
-  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  if (typeof window === 'undefined') return
+
+  let prefersDark = false
+  try {
+    prefersDark =
+      typeof window.matchMedia === 'function'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+        : false
+  } catch {
+    // Same restricted-context concern as getStoredMode.
+  }
+
   const resolved = resolveTheme(mode, prefersDark)
   const root = document.documentElement
 
@@ -35,5 +50,9 @@ export function applyTheme(mode: ThemeMode): void {
   root.classList.add(resolved)
   root.style.colorScheme = resolved
 
-  window.localStorage.setItem(STORAGE_KEY, mode)
+  try {
+    window.localStorage.setItem(STORAGE_KEY, mode)
+  } catch {
+    // Persistence is best-effort.
+  }
 }

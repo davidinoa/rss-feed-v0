@@ -48,6 +48,16 @@ describe('getStoredMode', () => {
     window.localStorage.setItem('theme', 'sunset')
     expect(getStoredMode()).toBe('auto')
   })
+
+  it("returns 'auto' when localStorage.getItem throws (restricted context)", () => {
+    const spy = vi
+      .spyOn(window.localStorage.__proto__, 'getItem')
+      .mockImplementation(() => {
+        throw new Error('SecurityError')
+      })
+    expect(getStoredMode()).toBe('auto')
+    spy.mockRestore()
+  })
 })
 
 describe('applyTheme', () => {
@@ -114,5 +124,29 @@ describe('applyTheme', () => {
     expect(document.documentElement.style.colorScheme).toBe('dark')
     applyTheme('light')
     expect(document.documentElement.style.colorScheme).toBe('light')
+  })
+
+  it('treats prefers-color-scheme as false when matchMedia throws', () => {
+    Object.defineProperty(window, 'matchMedia', {
+      configurable: true,
+      writable: true,
+      value: () => {
+        throw new Error('not allowed')
+      },
+    })
+    applyTheme('auto')
+    expect(document.documentElement.classList.contains('light')).toBe(true)
+  })
+
+  it('does not throw when localStorage.setItem throws', () => {
+    mockMatchMedia(false)
+    const spy = vi
+      .spyOn(window.localStorage.__proto__, 'setItem')
+      .mockImplementation(() => {
+        throw new Error('QuotaExceededError')
+      })
+    expect(() => applyTheme('dark')).not.toThrow()
+    expect(document.documentElement.classList.contains('dark')).toBe(true)
+    spy.mockRestore()
   })
 })
