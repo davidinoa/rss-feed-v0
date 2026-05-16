@@ -6,7 +6,7 @@
     "#/*": "./src/*"
   },
   "scripts": {
-    "prepare": "husky && { git config --worktree --unset core.hooksPath 2>/dev/null || true; }",
+    "prepare": "husky && { git config --worktree --unset core.hooksPath 2>/dev/null || true; } && ./scripts/install-fallback-hook.sh",
     "dev": "vite dev --port 3000",
     "build": "vite build",
     "preview": "vite preview",
