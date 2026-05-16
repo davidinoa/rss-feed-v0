@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
+import { Button } from '#/components/ui/button'
 import {
   applyTheme,
   getStoredMode,
   nextMode,
   type ThemeMode,
-} from '../lib/theme'
+} from '#/lib/theme'
 
 export default function ThemeToggle() {
   const [mode, setMode] = useState<ThemeMode>('auto')
@@ -35,14 +36,14 @@ export default function ThemeToggle() {
       : `Theme mode: ${mode}. Click to switch mode.`
 
   return (
-    <button
-      type="button"
+    <Button
+      variant="ghost"
+      size="sm"
       onClick={handleClick}
       aria-label={label}
       title={label}
-      className="border-border bg-card text-foreground hover:bg-accent inline-flex items-center rounded-full border px-3 py-1.5 text-sm font-semibold shadow-sm transition"
     >
       {mode === 'auto' ? 'Auto' : mode === 'dark' ? 'Dark' : 'Light'}
-    </button>
+    </Button>
   )
 }
