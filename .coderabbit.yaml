@@ -50,9 +50,13 @@ reviews:
           hardcoded.
         - Missing-key behavior degrades gracefully in dev (warn + render
           children) and throws in production.
-        - Server-side auth uses `@clerk/react`, not
-          `@clerk/tanstack-react-start`, per
-          docs/adr/0001-clerk-react-not-tanstack-react-start.md.
+        - The project uses `@clerk/react` (client-side only, GA) because
+          there are no server-side auth needs today. Anything introducing
+          server-side `auth()`, `getAuth()`, or `clerkMiddleware` should
+          revisit
+          docs/adr/0001-clerk-react-not-tanstack-react-start.md — those
+          live in `@clerk/tanstack-react-start`, which the ADR
+          deliberately defers.
 
     - path: 'convex/**/*.ts'
       instructions: |
@@ -77,7 +81,7 @@ reviews:
         build-time variables, not runtime secrets — see docs/deploy.md
         for the gotcha.
 
-    - path: '**/*.test.ts'
+    - path: '**/*.test.{ts,tsx}'
       instructions: |
         Vitest unit specs (jsdom + @testing-library/react). Check that:
         - Specs are co-located with the source they cover.
