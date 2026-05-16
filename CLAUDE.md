@@ -22,7 +22,7 @@ Cloudflare Workers via Workers Build (GitHub integration). `VITE_*` env vars are
 
 ## Commit conventions
 
-All commits in this repo **must** follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). Enforced by a `commit-msg` hook (`commitlint` + `simple-git-hooks`) — non-conforming messages are rejected.
+All commits in this repo **must** follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). Enforced by a `commit-msg` hook (`commitlint` + `husky`) — non-conforming messages are rejected. The hook lives in `.husky/commit-msg` and is wired up via `core.hooksPath=.husky/_`, which works in git worktrees as well as the main checkout.
 
 Format: `type(scope?): description`
 
