@@ -26,6 +26,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm format:check
+      # Storybook's vitest addon renders every story in headless Chromium.
+      - run: pnpm exec playwright install chromium --with-deps
       - run: pnpm test
       - run: pnpm intent:stale
 
