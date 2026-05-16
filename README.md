@@ -299,9 +299,9 @@ Active config (`.coderabbit.yaml`):
 ### Free tier limits
 
 The permanent free tier covers public repos (this one is) with rate limits
-of **4 PR reviews/hour** and **200 files/hour**. Excess queues — it isn't
-discarded. If a review doesn't appear instantly during a busy push window,
-that's expected.
+of **4 PR reviews/hour** and **200 files/hour**. Excess reviews are queued,
+not discarded. If a review doesn't appear instantly during a busy push
+window, that's expected.
 
 ### Tweak the config
 
