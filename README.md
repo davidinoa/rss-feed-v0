@@ -86,9 +86,12 @@ items off as you finish them; add new ones as integrations grow.
 ### CodeRabbit
 
 - [x] Push the repo to GitHub
-- [ ] Install the [CodeRabbit GitHub App](https://github.com/apps/coderabbitai)
+- [x] Make the repo public so the free tier's PR review quota applies
+      (free is public-repo only; private repos need a paid plan)
+- [x] Install the [CodeRabbit GitHub App](https://github.com/apps/coderabbitai)
       on the repo or org
 - [ ] Tune `.coderabbit.yaml` `path_instructions` as the codebase grows
+      (tracked in [#11](https://github.com/davidinoa/rss-feed-v0/issues/11))
 
 ### Playwright
 
@@ -279,16 +282,32 @@ pnpm cf-typegen
 
 ## Code review (CodeRabbit)
 
-CodeRabbit is configured via `.coderabbit.yaml` but runs as an external GitHub
-App, not as in-app code. To enable it on this repo:
+CodeRabbit reviews PRs targeting `main` automatically. The GitHub App is
+installed on this repo and reads `.coderabbit.yaml` from the repo root.
 
-1. Push the repo to GitHub.
-2. Install the [CodeRabbit GitHub App](https://github.com/apps/coderabbitai) on
-   the repo (or the whole org).
-3. Open a pull request. CodeRabbit will pick up `.coderabbit.yaml` automatically
-   and post a review.
+Active config (`.coderabbit.yaml`):
 
-Tweak `path_instructions` in `.coderabbit.yaml` as the codebase grows.
+- **Profile**: `chill` — suggestions framed as nits, no required-changes
+  workflow blocking the PR.
+- **Auto-review**: enabled for PRs into `main` (drafts excluded).
+- **Path filters**: skips generated files (`*.gen.ts`, `routeTree.gen.ts`),
+  lockfiles, and build output (`.wrangler/`, `.output/`, `dist/`).
+- **Path instructions**: targeted rules for `src/routes/**` (TanStack Router
+  patterns), `src/integrations/clerk/**`, and `wrangler.jsonc`. Refresh
+  tracked in [#11](https://github.com/davidinoa/rss-feed-v0/issues/11).
+
+### Free tier limits
+
+The permanent free tier covers public repos (this one is) with rate limits
+of **4 PR reviews/hour** and **200 files/hour**. Excess reviews are queued,
+not discarded. If a review doesn't appear instantly during a busy push
+window, that's expected.
+
+### Tweak the config
+
+Edit `.coderabbit.yaml` and open a PR; CodeRabbit picks the new config up on
+the next review. See [the configuration reference](https://docs.coderabbit.ai/reference/configuration)
+for the full schema.
 
 ## Agent skills (TanStack Intent)
 
