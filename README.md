@@ -65,7 +65,9 @@ items off as you finish them; add new ones as integrations grow.
       `useMutation(api.feeds.add)` (pattern in the Convex section below)
 - [ ] Retire `src/lib/feeds.ts` once routes are migrated (or repurpose as
       seed data)
-- [ ] Run `pnpm convex:deploy` from CI before each production release
+- [ ] Set the `CONVEX_DEPLOY_KEY` repo secret so the `convex-deploy` CI
+      job can run on pushes to `main` (workflow is already wired up;
+      see `.github/workflows/ci.yml` and [#7](https://github.com/davidinoa/rss-feed-v0/issues/7))
 
 ### Cloudflare Workers
 
@@ -102,15 +104,18 @@ items off as you finish them; add new ones as integrations grow.
 
 - [ ] Pin the `"latest"` versions in `package.json` to fixed semver before
       shipping (supply chain hygiene)
-- [ ] (Optional) Add `pnpm intent:stale` as a CI check so library skills
-      stay in sync with their source docs
+- [x] Run `pnpm intent:stale` as a CI check so library skills stay in
+      sync with their source docs (in `.github/workflows/ci.yml`)
 
 ### CI
 
-- [ ] Add a GitHub Actions workflow running, in order:
+- [x] GitHub Actions workflow at `.github/workflows/ci.yml` runs
       `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm format:check`,
-      `pnpm test`, `pnpm test:e2e`, `pnpm intent:stale`,
-      `pnpm convex:deploy` (on main)
+      `pnpm test`, `pnpm test:e2e`, `pnpm intent:stale` on every PR
+      and push, plus `pnpm convex:deploy` on pushes to `main` (gated on
+      the `CONVEX_DEPLOY_KEY` secret — see the Convex follow-up above).
+- [x] `commit-msg` hook + commitlint CI workflow gate Conventional
+      Commits locally and on PR / push to `main`
 
 ## Project tour
 
