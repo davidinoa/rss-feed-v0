@@ -104,7 +104,7 @@ function AddFeed() {
               .map((e) =>
                 typeof e === 'string'
                   ? e
-                  : ((e as { message?: string })?.message ?? ''),
+                  : ((e as unknown as { message?: string })?.message ?? ''),
               )
               .filter(Boolean)
               .join(', ')
