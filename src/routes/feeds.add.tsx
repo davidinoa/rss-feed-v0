@@ -80,9 +80,7 @@ function AddFeed() {
       <p className="text-muted-foreground mb-2 text-xs font-bold uppercase tracking-widest">
         Subscribe
       </p>
-      <h2 className="text-foreground mb-1 text-xl font-semibold">
-        Add a feed
-      </h2>
+      <h2 className="text-foreground mb-1 text-xl font-semibold">Add a feed</h2>
       <p className="text-muted-foreground mb-6 text-sm">
         Paste an RSS or Atom URL. We'll fetch it on the next sync.
       </p>

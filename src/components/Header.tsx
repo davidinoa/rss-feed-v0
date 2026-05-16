@@ -51,9 +51,7 @@ export default function Header() {
             About
           </Link>
           <details className="relative w-full sm:w-auto">
-            <summary
-              className={`${navLinkBase} list-none cursor-pointer`}
-            >
+            <summary className={`${navLinkBase} list-none cursor-pointer`}>
               Demos
             </summary>
             <div className="border-border bg-popover mt-2 min-w-56 rounded-xl border p-2 shadow-lg sm:absolute sm:right-0">

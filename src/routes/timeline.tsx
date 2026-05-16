@@ -46,10 +46,7 @@ function Timeline() {
               <span className="text-foreground font-semibold">
                 {a.feedTitle}
               </span>
-              <time
-                dateTime={a.publishedAt}
-                className="text-muted-foreground"
-              >
+              <time dateTime={a.publishedAt} className="text-muted-foreground">
                 {relativeTime(a.publishedAt)}
               </time>
             </div>

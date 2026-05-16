@@ -1,10 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import {
-  applyTheme,
-  getStoredMode,
-  nextMode,
-  resolveTheme,
-} from './theme'
+import { applyTheme, getStoredMode, nextMode, resolveTheme } from './theme'
 
 describe('resolveTheme', () => {
   it("returns 'dark' when mode is auto and the system prefers dark", () => {
@@ -25,7 +20,7 @@ describe('resolveTheme', () => {
 })
 
 describe('nextMode', () => {
-  it("cycles light -> dark -> auto -> light", () => {
+  it('cycles light -> dark -> auto -> light', () => {
     expect(nextMode('light')).toBe('dark')
     expect(nextMode('dark')).toBe('auto')
     expect(nextMode('auto')).toBe('light')
@@ -95,7 +90,7 @@ describe('applyTheme', () => {
     expect(document.documentElement.classList.contains('light')).toBe(false)
   })
 
-  it("applies the resolved theme from matchMedia when mode is auto", () => {
+  it('applies the resolved theme from matchMedia when mode is auto', () => {
     mockMatchMedia(true)
     applyTheme('auto')
     expect(document.documentElement.classList.contains('dark')).toBe(true)

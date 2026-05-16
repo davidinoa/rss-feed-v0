@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { applyTheme, getStoredMode, nextMode, type ThemeMode } from '../lib/theme'
+import {
+  applyTheme,
+  getStoredMode,
+  nextMode,
+  type ThemeMode,
+} from '../lib/theme'
 
 export default function ThemeToggle() {
   const [mode, setMode] = useState<ThemeMode>('auto')

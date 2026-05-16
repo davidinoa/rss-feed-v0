@@ -37,4 +37,3 @@ export function applyTheme(mode: ThemeMode): void {
 
   window.localStorage.setItem(STORAGE_KEY, mode)
 }
-
