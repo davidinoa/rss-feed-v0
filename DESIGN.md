@@ -403,4 +403,4 @@ When refining an existing surface:
 
 1. Touch **one component at a time** ("Update the feed item excerpt color"), not three.
 2. Reference the existing descriptive language: "Increase the internal padding on cards from 1.5rem to 2rem", not "make it bigger".
-3. If a change conflicts with a principle in this document, **flag the conflict in your response** before making the change. The principles in Section 4 (Density & Restraint) and the typography rules in Section 3 are intentional and rarely correct to violate.
+3. If a change conflicts with a principle in this document, **flag the conflict in your response** before making the change. The principles in Section 6 (Density & Restraint Rules) and the typography rules in Section 3 are intentional and rarely correct to violate.
