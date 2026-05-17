@@ -1,0 +1,5 @@
+# Build the design system on shadcn token vocabulary with .dark class
+
+Status: accepted — revisit if the brand identity shifts away from Linear-style neutrals, or if shadcn changes its token vocabulary in a major release.
+
+We adopt the Frontpage brand kit (Inter, GitHub-style neutrals, blue accent) as the visual foundation, replacing the placeholder sea/lagoon aesthetic — a hybrid was considered but rejected as muddled and harder to grow into a real component library. We use shadcn's own CSS-variable names (`--background`, `--foreground`, `--primary`, etc.) as the canonical token vocabulary, not the brand-kit's `--color-bg-primary` style; keeping the brand-kit names was rejected because every `npx shadcn add` output would need patching, producing drift on every install. Dark mode is triggered by a `.dark` class on `<html>`, not the previous `[data-theme]` attribute, so every shadcn component's `dark:` variants Just Work with zero per-component configuration. The brand kit's semantic intent (which color does what) survives — only the names change; the full shadcn↔brand-kit mapping table lives in the parent PRD (#15) rather than being duplicated here.
