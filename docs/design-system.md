@@ -8,7 +8,7 @@ The why behind these choices lives in [ADR-0002](./adr/0002-design-system-founda
 
 Colors use a **two-tier architecture** — private primitives (`--neutral-100`, `--blue-600`) named by appearance, and public semantics (`--primary`, `--background`) named by role. Use the Tailwind utility for the semantic (`bg-primary`, `text-muted-foreground`) in JSX — never inline a hex, and never reach for a primitive directly.
 
-Tailwind v4's default color palette is disabled (`@theme { --color-*: initial; }`), so `bg-blue-500`, `text-gray-700`, and similar are NOT valid utilities. Only `transparent`, `currentColor`, and `inherit` are preserved as functional escape hatches.
+Tailwind v4's default color palette is disabled (`@theme { --color-*: initial; }`), so `bg-blue-500`, `text-gray-700`, and similar are NOT valid utilities. Only the functional non-palette values (`text-transparent` / `bg-transparent`, `text-current` / `bg-current`, `text-inherit` / `bg-inherit`) are preserved as escape hatches.
 
 **Browse the full catalog in Storybook**: `Design System / Tokens` (`pnpm storybook`). The Overview page explains the architecture and lists the brand-kit cross-reference; per-tier pages render every primitive, semantic, and radius value with light/dark previews resolved at runtime from the live CSS.
 
