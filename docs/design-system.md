@@ -1,16 +1,18 @@
-# Design system
+# Design system — engineering reference
 
-Quick-reference for anyone (including agents) starting a UI change in this repo. Read this once before your first design-system PR; refer back when adding a component.
+Conventions for writing component code in this repo: file naming, shadcn installation, Storybook stories, dark-mode rules, accessibility enforcement. Read this once before your first UI PR; refer back when adding a component.
 
-The why behind these choices lives in [ADR-0002](./adr/0002-design-system-foundation.md) (foundation) and [ADR-0003](./adr/0003-tiered-color-tokens.md) (tiered color tokens).
+**For visual decisions** — palette values, typography scale, component design intent — see [`DESIGN.md`](../DESIGN.md) at the repo root. This document deliberately doesn't duplicate token values; the [Storybook tokens catalog](#tokens--how-to-use-them) renders every live value via `getComputedStyle()` and stays authoritative.
 
-## Tokens
+The why behind the foundational architecture decisions lives in [ADR-0002](./adr/0002-design-system-foundation.md) (shadcn vocabulary), [ADR-0003](./adr/0003-tiered-color-tokens.md) (tiered tokens), and [ADR-0004](./adr/0004-adopt-quiet-reading-room.md) (Quiet Reading Room visual direction).
 
-Colors use a **two-tier architecture** — private primitives (`--neutral-100`, `--blue-600`) named by appearance, and public semantics (`--primary`, `--background`) named by role. Use the Tailwind utility for the semantic (`bg-primary`, `text-muted-foreground`) in JSX — never inline a hex, and never reach for a primitive directly.
+## Tokens — how to use them
+
+Colors use a **two-tier architecture** per ADR-0003: private primitives named by appearance, public semantics named by role. **Always use the semantic Tailwind utility** (`bg-primary`, `text-muted-foreground`, `bg-card`, etc.) in JSX. Never inline a hex, and never reach for a primitive directly.
 
 Tailwind v4's default color palette is disabled (`@theme { --color-*: initial; }`), so `bg-blue-500`, `text-gray-700`, and similar are NOT valid utilities. Only the functional non-palette values (`text-transparent` / `bg-transparent`, `text-current` / `bg-current`, `text-inherit` / `bg-inherit`) are preserved as escape hatches.
 
-**Browse the full catalog in Storybook**: `Design System / Tokens` (`pnpm storybook`). The Overview page explains the architecture and lists the brand-kit cross-reference; per-tier pages render every primitive, semantic, and radius value with light/dark previews resolved at runtime from the live CSS.
+**Browse the full catalog in Storybook**: `Design System / Tokens` (`pnpm storybook`). The Overview page explains the architecture; per-tier pages render every primitive, semantic, and radius value with light/dark previews resolved at runtime from the live CSS. The Storybook catalog is the authoritative live view; DESIGN.md is the authoritative spec.
 
 States (hover, active, focus) are expressed via Tailwind's opacity modifier (`hover:bg-primary/90`) inherited from shadcn — not explicit state tokens. See ADR-0003 for the rationale.
 
