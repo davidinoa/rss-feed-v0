@@ -1,7 +1,7 @@
 import type { StorybookConfig } from '@storybook/tanstack-react'
 
 const config: StorybookConfig = {
-  stories: ['../src/**/*.stories.@(ts|tsx)'],
+  stories: ['../src/**/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
   addons: [
     '@storybook/addon-a11y',
     '@storybook/addon-themes',

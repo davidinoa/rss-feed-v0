@@ -1,0 +1,216 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Design System/Tokens/Overview" />
+
+# Design Tokens
+
+This project uses a **two-tier color token architecture** with strict Tailwind
+exposure. Decisions and ambiguities live in
+[ADR-0003](https://github.com/davidinoa/rss-feed-v0/blob/main/docs/adr/0003-tiered-color-tokens.md).
+
+## Tier 1 — Primitives (private)
+
+Raw palette values, named by appearance: `--neutral-100`, `--blue-600`. They're
+defined as CSS variables on `:root` but are **not** exposed as Tailwind
+utilities — `bg-neutral-100` is not a valid class. Browse the full palette in
+the **Colors → Primitives** story.
+
+## Tier 2 — Semantics (public)
+
+Intent-bearing aliases named by role: `--primary`, `--background`,
+`--muted-foreground`. Each semantic references a primitive via `var(...)` and
+is exposed through `@theme inline` as a Tailwind utility (`bg-primary`,
+`text-foreground`). Browse them in the **Colors → Semantic** story — each
+row shows the primitive referenced in light and dark mode, the matching
+utility, and usage guidance.
+
+## Strict mode
+
+Tailwind v4's default color palette is disabled (`--color-*: initial`).
+`bg-blue-500`, `text-gray-700`, and similar are **not valid utilities** in
+this codebase. Reach for the semantic token instead. The functional
+non-palette values `transparent`, `currentColor`, and `inherit` are preserved.
+
+## Custom semantic tokens
+
+Beyond shadcn's defaults, four tokens carry domain meaning:
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Token</th>
+      <th align="left">Use it for</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>--success</code> / <code>bg-success</code>
+      </td>
+      <td>Feed-health indicator, "fetched OK" confirmations.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--warning</code> / <code>bg-warning</code>
+      </td>
+      <td>Stale feed, retry suggested, soft validation issues.</td>
+    </tr>
+    <tr>
+      <td>
+        <code>--unread-indicator</code> / <code>bg-unread-indicator</code>
+      </td>
+      <td>
+        The dot on unread items. Distinct from <code>--primary</code> so unread
+        color can shift without affecting primary actions.
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--accent-subtle</code> / <code>bg-accent-subtle</code>
+      </td>
+      <td>
+        Selected/active row background (sidebar, feed list). Distinct from{' '}
+        <code>--accent</code>, which is the <em>hover</em> surface.
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+Use `text-success-foreground` / `text-warning-foreground` when applying
+`--success` / `--warning` as backgrounds.
+
+## States are implicit
+
+Hover, active, and focus colors are expressed via Tailwind's opacity modifier
+(`hover:bg-primary/90`), not explicit state tokens. This is intentional — it
+keeps every `npx shadcn add` install drop-in compatible. See ADR-0003 for the
+"if specs ever diverge from a simple opacity overlay, promote affected states
+one at a time" rule.
+
+## Brand-kit cross-reference
+
+For anyone working from the external Frontpage brand-kit reference, this is
+how its names map to the canonical shadcn vocabulary:
+
+<table>
+  <thead>
+    <tr>
+      <th align="left">Semantic token</th>
+      <th align="left">Brand-kit name</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>--background</code>
+      </td>
+      <td>
+        <code>--color-bg-primary</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--foreground</code>
+      </td>
+      <td>
+        <code>--color-text-primary</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--card</code> / <code>--popover</code>
+      </td>
+      <td>
+        <code>--color-surface</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--primary</code>
+      </td>
+      <td>
+        <code>--color-accent</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--secondary</code>
+      </td>
+      <td>
+        <code>--color-bg-secondary</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--muted</code> / <code>--accent</code>
+      </td>
+      <td>
+        <code>--color-bg-tertiary</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--muted-foreground</code>
+      </td>
+      <td>
+        <code>--color-text-tertiary</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--destructive</code>
+      </td>
+      <td>
+        <code>--color-error</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--border</code> / <code>--input</code>
+      </td>
+      <td>
+        <code>--color-border</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--success</code>
+      </td>
+      <td>
+        <code>--color-success</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--warning</code>
+      </td>
+      <td>
+        <code>--color-warning</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--unread-indicator</code>
+      </td>
+      <td>
+        <code>--color-unread-indicator</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>--accent-subtle</code>
+      </td>
+      <td>
+        <code>--color-accent-subtle</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+## What's NOT tokenized
+
+Typography (beyond `--font-sans` / `--font-serif`), spacing, motion, elevation,
+and z-index intentionally use Tailwind defaults. They aren't formalized as
+project tokens because Tailwind's defaults already serve the brand and no
+current consumer demands a custom value. See ADR-0003 for the rationale and
+re-evaluation criteria.
