@@ -109,10 +109,7 @@ function SemanticRow({ token }: { token: SemanticColorToken }) {
       <td className="px-3 py-3 align-top">
         <div className="flex flex-col gap-1">
           {token.utilities.map((utility) => (
-            <code
-              key={utility}
-              className="text-foreground font-mono text-xs"
-            >
+            <code key={utility} className="text-foreground font-mono text-xs">
               {utility}
             </code>
           ))}
