@@ -1,4 +1,4 @@
-# Tier color tokens (primitive + semantic) on top of shadcn vocabulary
+# Tiered color tokens (primitive + semantic) on top of shadcn vocabulary
 
 Status: accepted — supersedes the single-tier color setup introduced in ADR-0002. Revisit if a second platform (iOS/Android) or designer-driven Figma token sync becomes a real workflow, or if shadcn changes its semantic vocabulary in a major release.
 
