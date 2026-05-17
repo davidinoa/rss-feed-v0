@@ -2,52 +2,17 @@
 
 Quick-reference for anyone (including agents) starting a UI change in this repo. Read this once before your first design-system PR; refer back when adding a component.
 
-The why behind these choices lives in [ADR-0002](./adr/0002-design-system-foundation.md).
+The why behind these choices lives in [ADR-0002](./adr/0002-design-system-foundation.md) (foundation) and [ADR-0003](./adr/0003-tiered-color-tokens.md) (tiered color tokens).
 
 ## Tokens
 
-Canonical names follow shadcn's vocabulary. Values come from the Frontpage brand kit. Use the Tailwind utility name in JSX (`bg-primary`, `text-muted-foreground`, etc.) — never inline a hex.
+Colors use a **two-tier architecture** — private primitives (`--neutral-100`, `--blue-600`) named by appearance, and public semantics (`--primary`, `--background`) named by role. Use the Tailwind utility for the semantic (`bg-primary`, `text-muted-foreground`) in JSX — never inline a hex, and never reach for a primitive directly.
 
-| Token | Brand-kit name | Light | Dark | Tailwind utility |
-|---|---|---|---|---|
-| `--background` | `--color-bg-primary` | `#FFFFFF` | `#0D1117` | `bg-background` |
-| `--foreground` | `--color-text-primary` | `#1A1D21` | `#E6EDF3` | `text-foreground` |
-| `--card` | `--color-surface` | `#FFFFFF` | `#161B22` | `bg-card` |
-| `--card-foreground` | `--color-text-primary` | `#1A1D21` | `#E6EDF3` | `text-card-foreground` |
-| `--popover` | `--color-surface` | `#FFFFFF` | `#161B22` | `bg-popover` |
-| `--popover-foreground` | `--color-text-primary` | `#1A1D21` | `#E6EDF3` | `text-popover-foreground` |
-| `--primary` | `--color-accent` | `#2563EB` | `#58A6FF` | `bg-primary`, `text-primary` |
-| `--primary-foreground` | text-on-accent | `#FFFFFF` | `#0D1117` | `text-primary-foreground` |
-| `--secondary` | `--color-bg-secondary` | `#F8F9FA` | `#161B22` | `bg-secondary` |
-| `--secondary-foreground` | `--color-text-primary` | `#1A1D21` | `#E6EDF3` | `text-secondary-foreground` |
-| `--muted` | `--color-bg-tertiary` | `#F1F3F5` | `#21262D` | `bg-muted` |
-| `--muted-foreground` | `--color-text-tertiary` | `#8B949E` | `#6E7681` | `text-muted-foreground` |
-| `--accent` | `--color-bg-tertiary` (hover) | `#F1F3F5` | `#21262D` | `bg-accent`, `hover:bg-accent` |
-| `--accent-foreground` | `--color-text-primary` | `#1A1D21` | `#E6EDF3` | `text-accent-foreground` |
-| `--destructive` | `--color-error` | `#DC2626` | `#F85149` | `bg-destructive`, `text-destructive` |
-| `--destructive-foreground` | text-on-destructive | `#FFFFFF` | `#0D1117` | `text-destructive-foreground` |
-| `--border` | `--color-border` | `#E1E4E8` | `#30363D` | `border-border`, `border` |
-| `--input` | `--color-border` | `#E1E4E8` | `#30363D` | `border-input` |
-| `--ring` | `--color-accent` | `#2563EB` | `#58A6FF` | `focus-visible:ring-ring` |
-| `--success` (custom) | `--color-success` | `#16A34A` | `#3FB950` | `bg-success`, `text-success` |
-| `--success-foreground` (custom) | text-on-success | `#FFFFFF` | `#0D1117` | `text-success-foreground` |
-| `--warning` (custom) | `--color-warning` | `#CA8A04` | `#D29922` | `bg-warning`, `text-warning` |
-| `--warning-foreground` (custom) | text-on-warning | `#FFFFFF` | `#0D1117` | `text-warning-foreground` |
-| `--unread-indicator` (custom) | `--color-unread-indicator` | `#2563EB` | `#58A6FF` | `bg-unread-indicator` |
-| `--accent-subtle` (custom) | `--color-accent-subtle` | `#EFF6FF` | `#1A2332` | `bg-accent-subtle` |
+Tailwind v4's default color palette is disabled (`@theme { --color-*: initial; }`), so `bg-blue-500`, `text-gray-700`, and similar are NOT valid utilities. Only the functional non-palette values (`text-transparent` / `bg-transparent`, `text-current` / `bg-current`, `text-inherit` / `bg-inherit`) are preserved as escape hatches.
 
-`--radius` is `0.5rem` (shadcn default; matches brand-kit `--radius-md`). Tailwind exposes `rounded-sm`/`md`/`lg`/`xl` derived from it.
+**Browse the full catalog in Storybook**: `Design System / Tokens` (`pnpm storybook`). The Overview page explains the architecture and lists the brand-kit cross-reference; per-tier pages render every primitive, semantic, and radius value with light/dark previews resolved at runtime from the live CSS.
 
-## Custom semantic tokens
-
-Beyond shadcn's defaults, four custom tokens carry domain meaning:
-
-- `--success` / `bg-success` — feed-health indicator, "fetched OK" confirmations.
-- `--warning` / `bg-warning` — stale feed, retry suggested, soft validation issues.
-- `--unread-indicator` / `bg-unread-indicator` — the dot on unread items. Distinct from `--primary` so unread-state colors can shift without affecting primary actions.
-- `--accent-subtle` / `bg-accent-subtle` — selected/active row background in lists (sidebar, feed list). Distinct from `--accent` (which is the *hover* surface).
-
-Use `text-success-foreground` / `text-warning-foreground` for text-on-color when applying `--success` / `--warning` as backgrounds.
+States (hover, active, focus) are expressed via Tailwind's opacity modifier (`hover:bg-primary/90`) inherited from shadcn — not explicit state tokens. See ADR-0003 for the rationale.
 
 ## Adding a shadcn component
 
