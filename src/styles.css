@@ -2,67 +2,107 @@
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 
-:root {
-  --background: #ffffff;
-  --foreground: #1a1d21;
-  --card: #ffffff;
-  --card-foreground: #1a1d21;
-  --popover: #ffffff;
-  --popover-foreground: #1a1d21;
-  --primary: #2563eb;
-  --primary-foreground: #ffffff;
-  --secondary: #f8f9fa;
-  --secondary-foreground: #1a1d21;
-  --muted: #f1f3f5;
-  --muted-foreground: #8b949e;
-  --accent: #f1f3f5;
-  --accent-foreground: #1a1d21;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-  --border: #e1e4e8;
-  --input: #e1e4e8;
-  --ring: #2563eb;
+/* Disable Tailwind's default color palette so every bg-* / text-* / border-*
+   in the codebase resolves to a semantic token. Functional non-palette
+   values (transparent, currentColor, inherit) are preserved. See ADR-0003. */
+@theme {
+  --color-*: initial;
+  --color-transparent: transparent;
+  --color-current: currentColor;
+  --color-inherit: inherit;
+}
 
-  --success: #16a34a;
-  --success-foreground: #ffffff;
-  --warning: #ca8a04;
-  --warning-foreground: #ffffff;
-  --unread-indicator: #2563eb;
-  --accent-subtle: #eff6ff;
+:root {
+  /* Primitives — private. NOT exposed as Tailwind utilities. Off-scale step
+     numbers (--neutral-150, -850, -925) are intentional. See ADR-0003. */
+  --neutral-0: #ffffff;
+  --neutral-50: #f8f9fa;
+  --neutral-100: #f1f3f5;
+  --neutral-150: #e6edf3;
+  --neutral-200: #e1e4e8;
+  --neutral-500: #8b949e;
+  --neutral-600: #6e7681;
+  --neutral-800: #30363d;
+  --neutral-850: #21262d;
+  --neutral-900: #1a1d21;
+  --neutral-925: #161b22;
+  --neutral-1000: #0d1117;
+
+  --blue-50: #eff6ff;
+  --blue-400: #58a6ff;
+  --blue-600: #2563eb;
+  --blue-950: #1a2332;
+  --red-500: #f85149;
+  --red-600: #dc2626;
+  --green-500: #3fb950;
+  --green-600: #16a34a;
+  --yellow-500: #d29922;
+  --yellow-600: #ca8a04;
+
+  /* Semantics (light) — public via @theme inline below. Always reference
+     primitives via var(...); never inline a hex. */
+  --background: var(--neutral-0);
+  --foreground: var(--neutral-900);
+  --card: var(--neutral-0);
+  --card-foreground: var(--neutral-900);
+  --popover: var(--neutral-0);
+  --popover-foreground: var(--neutral-900);
+  --primary: var(--blue-600);
+  --primary-foreground: var(--neutral-0);
+  --secondary: var(--neutral-50);
+  --secondary-foreground: var(--neutral-900);
+  --muted: var(--neutral-100);
+  --muted-foreground: var(--neutral-500);
+  --accent: var(--neutral-100);
+  --accent-foreground: var(--neutral-900);
+  --destructive: var(--red-600);
+  --destructive-foreground: var(--neutral-0);
+  --border: var(--neutral-200);
+  --input: var(--neutral-200);
+  --ring: var(--blue-600);
+
+  --success: var(--green-600);
+  --success-foreground: var(--neutral-0);
+  --warning: var(--yellow-600);
+  --warning-foreground: var(--neutral-0);
+  --unread-indicator: var(--blue-600);
+  --accent-subtle: var(--blue-50);
 
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: #0d1117;
-  --foreground: #e6edf3;
-  --card: #161b22;
-  --card-foreground: #e6edf3;
-  --popover: #161b22;
-  --popover-foreground: #e6edf3;
-  --primary: #58a6ff;
-  --primary-foreground: #0d1117;
-  --secondary: #161b22;
-  --secondary-foreground: #e6edf3;
-  --muted: #21262d;
-  --muted-foreground: #6e7681;
-  --accent: #21262d;
-  --accent-foreground: #e6edf3;
-  --destructive: #f85149;
-  --destructive-foreground: #0d1117;
-  --border: #30363d;
-  --input: #30363d;
-  --ring: #58a6ff;
+  /* Remap semantics to dark-mode primitives. Primitives themselves don't change. */
+  --background: var(--neutral-1000);
+  --foreground: var(--neutral-150);
+  --card: var(--neutral-925);
+  --card-foreground: var(--neutral-150);
+  --popover: var(--neutral-925);
+  --popover-foreground: var(--neutral-150);
+  --primary: var(--blue-400);
+  --primary-foreground: var(--neutral-1000);
+  --secondary: var(--neutral-925);
+  --secondary-foreground: var(--neutral-150);
+  --muted: var(--neutral-850);
+  --muted-foreground: var(--neutral-600);
+  --accent: var(--neutral-850);
+  --accent-foreground: var(--neutral-150);
+  --destructive: var(--red-500);
+  --destructive-foreground: var(--neutral-1000);
+  --border: var(--neutral-800);
+  --input: var(--neutral-800);
+  --ring: var(--blue-400);
 
-  --success: #3fb950;
-  --success-foreground: #0d1117;
-  --warning: #d29922;
-  --warning-foreground: #0d1117;
-  --unread-indicator: #58a6ff;
-  --accent-subtle: #1a2332;
+  --success: var(--green-500);
+  --success-foreground: var(--neutral-1000);
+  --warning: var(--yellow-500);
+  --warning-foreground: var(--neutral-1000);
+  --unread-indicator: var(--blue-400);
+  --accent-subtle: var(--blue-950);
 }
 
 @theme inline {
+  /* Expose ONLY semantic tokens as Tailwind utilities. Primitives stay private. */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
