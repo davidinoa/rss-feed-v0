@@ -18,7 +18,7 @@ Single-context (one `CONTEXT.md` + `docs/adr/` at the repo root). See `docs/agen
 
 ### Design system
 
-shadcn + Tailwind v4 + Storybook 10. Token reference, component conventions, and story rules in [`docs/design-system.md`](docs/design-system.md). Read once before your first UI PR.
+shadcn + Tailwind v4 + Storybook 10. Visual spec (palette, type scale, component design intent) in [`DESIGN.md`](DESIGN.md) at the repo root. Engineering reference (file naming, shadcn install, stories, dark mode, a11y) in [`docs/design-system.md`](docs/design-system.md). Read both once before your first UI PR.
 
 ## Deployment
 
