@@ -16,6 +16,10 @@ Canonical defaults (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-
 
 Single-context (one `CONTEXT.md` + `docs/adr/` at the repo root). See `docs/agents/domain.md`.
 
+### Design system
+
+shadcn + Tailwind v4 + Storybook 10. Token reference, component conventions, and story rules in [`docs/design-system.md`](docs/design-system.md). Read once before your first UI PR.
+
 ## Deployment
 
 Cloudflare Workers via Workers Build (GitHub integration). `VITE_*` env vars are **build-time inlined** — set them as build-time variables in the Cloudflare dashboard, not as `wrangler secret put` runtime secrets. See [`docs/deploy.md`](docs/deploy.md) for the full flow, gotchas, and warning explanations.
