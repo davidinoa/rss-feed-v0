@@ -25,6 +25,7 @@ Canonical names follow shadcn's vocabulary. Values come from the Frontpage brand
 | `--accent` | `--color-bg-tertiary` (hover) | `#F1F3F5` | `#21262D` | `bg-accent`, `hover:bg-accent` |
 | `--accent-foreground` | `--color-text-primary` | `#1A1D21` | `#E6EDF3` | `text-accent-foreground` |
 | `--destructive` | `--color-error` | `#DC2626` | `#F85149` | `bg-destructive`, `text-destructive` |
+| `--destructive-foreground` | text-on-destructive | `#FFFFFF` | `#0D1117` | `text-destructive-foreground` |
 | `--border` | `--color-border` | `#E1E4E8` | `#30363D` | `border-border`, `border` |
 | `--input` | `--color-border` | `#E1E4E8` | `#30363D` | `border-input` |
 | `--ring` | `--color-accent` | `#2563EB` | `#58A6FF` | `focus-visible:ring-ring` |
@@ -63,7 +64,7 @@ The component lands at `src/components/ui/<name>.tsx`. Review the diff for:
 
 ## File & folder conventions
 
-```
+```text
 src/
 ├── components/
 │   ├── ui/         shadcn primitives (kebab-case, drop-in from registry)
