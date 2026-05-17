@@ -6,14 +6,20 @@ import { Meta } from '@storybook/addon-docs/blocks'
 
 This project uses a **two-tier color token architecture** with strict Tailwind
 exposure. Decisions and ambiguities live in
-[ADR-0003](https://github.com/davidinoa/rss-feed-v0/blob/main/docs/adr/0003-tiered-color-tokens.md).
+[ADR-0003](https://github.com/davidinoa/rss-feed-v0/blob/main/docs/adr/0003-tiered-color-tokens.md)
+(architecture) and
+[ADR-0004](https://github.com/davidinoa/rss-feed-v0/blob/main/docs/adr/0004-adopt-quiet-reading-room.md)
+(Quiet Reading Room visual direction). For the visual spec — palette values,
+component design intent — see
+[DESIGN.md](https://github.com/davidinoa/rss-feed-v0/blob/main/DESIGN.md) at
+the repo root.
 
 ## Tier 1 — Primitives (private)
 
-Raw palette values, named by appearance: `--neutral-100`, `--blue-600`. They're
-defined as CSS variables on `:root` but are **not** exposed as Tailwind
-utilities — `bg-neutral-100` is not a valid class. Browse the full palette in
-the **Colors → Primitives** story.
+Raw palette values, named descriptively by appearance: `--warm-parchment`,
+`--burnt-amber`, `--ink-espresso`. They're defined as CSS variables on `:root`
+but are **not** exposed as Tailwind utilities — `bg-warm-parchment` is not a
+valid class. Browse the full palette in the **Colors → Primitives** story.
 
 ## Tier 2 — Semantics (public)
 
@@ -60,8 +66,9 @@ Beyond shadcn's defaults, four tokens carry domain meaning:
         <code>--unread-indicator</code> / <code>bg-unread-indicator</code>
       </td>
       <td>
-        The dot on unread items. Distinct from <code>--primary</code> so unread
-        color can shift without affecting primary actions.
+        The dot on unread items. Intentionally identical to{' '}
+        <code>--primary</code> so the eye trains on one color for "wants your
+        attention" across the product (per ADR-0004).
       </td>
     </tr>
     <tr>
@@ -69,8 +76,9 @@ Beyond shadcn's defaults, four tokens carry domain meaning:
         <code>--accent-subtle</code> / <code>bg-accent-subtle</code>
       </td>
       <td>
-        Selected/active row background (sidebar, feed list). Distinct from{' '}
-        <code>--accent</code>, which is the <em>hover</em> surface.
+        Cell-level highlight — applied to inline elements within a row.
+        Currently identical to <code>--accent</code>; semantically distinct so
+        they can diverge later.
       </td>
     </tr>
   </tbody>
@@ -87,125 +95,14 @@ keeps every `npx shadcn add` install drop-in compatible. See ADR-0003 for the
 "if specs ever diverge from a simple opacity overlay, promote affected states
 one at a time" rule.
 
-## Brand-kit cross-reference
+## Visual reference
 
-For anyone working from the external Frontpage brand-kit reference, this is
-how its names map to the canonical shadcn vocabulary:
-
-<table>
-  <thead>
-    <tr>
-      <th align="left">Semantic token</th>
-      <th align="left">Brand-kit name</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <code>--background</code>
-      </td>
-      <td>
-        <code>--color-bg-primary</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--foreground</code>
-      </td>
-      <td>
-        <code>--color-text-primary</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--card</code> / <code>--popover</code>
-      </td>
-      <td>
-        <code>--color-surface</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--primary</code>
-      </td>
-      <td>
-        <code>--color-accent</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--secondary</code>
-      </td>
-      <td>
-        <code>--color-bg-secondary</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--muted</code> / <code>--accent</code>
-      </td>
-      <td>
-        <code>--color-bg-tertiary</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--muted-foreground</code>
-      </td>
-      <td>
-        <code>--color-text-tertiary</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--destructive</code>
-      </td>
-      <td>
-        <code>--color-error</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--border</code> / <code>--input</code>
-      </td>
-      <td>
-        <code>--color-border</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--success</code>
-      </td>
-      <td>
-        <code>--color-success</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--warning</code>
-      </td>
-      <td>
-        <code>--color-warning</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--unread-indicator</code>
-      </td>
-      <td>
-        <code>--color-unread-indicator</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <code>--accent-subtle</code>
-      </td>
-      <td>
-        <code>--color-accent-subtle</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
+For the canonical palette values, type scale, component design intent, and the
+naming rationale behind each primitive (Warm Parchment, Burnt Amber, Ink
+Espresso, etc.), see
+[DESIGN.md](https://github.com/davidinoa/rss-feed-v0/blob/main/DESIGN.md) at
+the repo root. The **Colors → Semantic** story renders the live values and
+their primitive mapping in one place; DESIGN.md §2 is the prose spec.
 
 ## What's NOT tokenized
 

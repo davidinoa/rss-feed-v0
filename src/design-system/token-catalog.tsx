@@ -37,6 +37,13 @@ function PrimitiveSwatch({ token }: { token: PrimitiveColorToken }) {
   )
 }
 
+const CATEGORY_LABELS: Record<PrimitiveColorToken['category'], string> = {
+  'neutral-light': 'Warm Neutrals — Light Mode',
+  'neutral-dark': 'Deep Neutrals — Dark Mode',
+  amber: 'Amber Accent',
+  functional: 'Functional Feedback',
+}
+
 export function ColorSwatchGrid({
   tokens,
 }: {
@@ -45,11 +52,10 @@ export function ColorSwatchGrid({
   const grouped = React.useMemo(() => {
     const acc: Record<PrimitiveColorToken['category'], PrimitiveColorToken[]> =
       {
-        neutral: [],
-        blue: [],
-        red: [],
-        green: [],
-        yellow: [],
+        'neutral-light': [],
+        'neutral-dark': [],
+        amber: [],
+        functional: [],
       }
     for (const token of tokens) acc[token.category].push(token)
     return acc
@@ -62,7 +68,7 @@ export function ColorSwatchGrid({
         .map((category) => (
           <section key={category} className="flex flex-col gap-3">
             <h3 className="text-foreground text-sm font-semibold tracking-wide uppercase">
-              {category}
+              {CATEGORY_LABELS[category]}
             </h3>
             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
               {grouped[category].map((token) => (

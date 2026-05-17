@@ -13,92 +13,113 @@
 }
 
 :root {
-  /* Primitives — private. NOT exposed as Tailwind utilities. Off-scale step
-     numbers (--neutral-150, -850, -925) are intentional. See ADR-0003. */
-  --neutral-0: #ffffff;
-  --neutral-50: #f8f9fa;
-  --neutral-100: #f1f3f5;
-  --neutral-150: #e6edf3;
-  --neutral-200: #e1e4e8;
-  --neutral-500: #8b949e;
-  --neutral-600: #6e7681;
-  --neutral-800: #30363d;
-  --neutral-850: #21262d;
-  --neutral-900: #1a1d21;
-  --neutral-925: #161b22;
-  --neutral-1000: #0d1117;
+  /* Primitives — private. NOT exposed as Tailwind utilities. Named
+     descriptively (warm-parchment, burnt-amber) rather than by numeric step.
+     The two-tier architecture from ADR-0003 is preserved; values are per
+     ADR-0004 (Quiet Reading Room) and DESIGN.md §2. */
 
-  --blue-50: #eff6ff;
-  --blue-400: #58a6ff;
-  --blue-600: #2563eb;
-  --blue-950: #1a2332;
-  --red-500: #f85149;
-  --red-600: #dc2626;
-  --green-500: #3fb950;
-  --green-600: #16a34a;
-  --yellow-500: #d29922;
-  --yellow-600: #ca8a04;
+  /* Warm light neutrals — parchment scale, used by light-mode semantics. */
+  --warm-parchment: #faf7f2;
+  --soft-vellum: #f0ebe2;
+  --antique-linen: #e6dfd2;
+  --aged-paper: #d8d0bf;
+  --muted-stone: #6b655d;
+  --pebble: #3f3a33;
+  --ink-espresso: #1a1612;
+
+  /* Deep warm dark neutrals — midnight scale, used by dark-mode semantics. */
+  --midnight-slate: #15130f;
+  --charcoal-mist: #1e1b16;
+  --smoke-veil: #2b2620;
+  --dusk-mauve: #3a342c;
+  --ash-stone: #9a9286;
+  --bone: #d6cfc2;
+  --cream-mist: #ede6d6;
+
+  /* Amber accent — the single signal hue across the product.
+     --burnt-amber tuned from the DESIGN.md draft value (#b8612d, 4.11:1 vs
+     --warm-parchment) to #a85426 (4.96:1) so primary text / CTA fill / focus
+     ring all meet WCAG AA. The lighter Amber Glow handles dark mode where
+     contrast against --midnight-slate needs a brighter tone. */
+  --burnt-amber: #a85426;
+  --amber-glow: #d67e45;
+  --amber-hush: #f3e6d6;
+  --amber-deep: #8e4a22;
+
+  /* Functional feedback — reserved for system signals (success, error, warning).
+     Tuned from DESIGN.md draft values so warm-parchment text passes WCAG AA
+     in both light and dark modes (success/warning fill surfaces). Text-only
+     usage on bg-background in dark mode is currently at AA-large (3:1) only;
+     promote to a dark-mode remap if/when that use case is needed. */
+  --sage-read: #4f6e50;
+  --brick-alert: #a8443c;
+  --honey-caution: #8c691f;
 
   /* Semantics (light) — public via @theme inline below. Always reference
      primitives via var(...); never inline a hex. */
-  --background: var(--neutral-0);
-  --foreground: var(--neutral-900);
-  --card: var(--neutral-0);
-  --card-foreground: var(--neutral-900);
-  --popover: var(--neutral-0);
-  --popover-foreground: var(--neutral-900);
-  --primary: var(--blue-600);
-  --primary-foreground: var(--neutral-0);
-  --secondary: var(--neutral-50);
-  --secondary-foreground: var(--neutral-900);
-  --muted: var(--neutral-100);
-  --muted-foreground: var(--neutral-500);
-  --accent: var(--neutral-100);
-  --accent-foreground: var(--neutral-900);
-  --destructive: var(--red-600);
-  --destructive-foreground: var(--neutral-0);
-  --border: var(--neutral-200);
-  --input: var(--neutral-200);
-  --ring: var(--blue-600);
+  --background: var(--warm-parchment);
+  --foreground: var(--ink-espresso);
+  --card: var(--soft-vellum);
+  --card-foreground: var(--ink-espresso);
+  --popover: var(--soft-vellum);
+  --popover-foreground: var(--ink-espresso);
+  --primary: var(--burnt-amber);
+  --primary-foreground: var(--warm-parchment);
+  --secondary: var(--soft-vellum);
+  --secondary-foreground: var(--pebble);
+  --muted: var(--antique-linen);
+  --muted-foreground: var(--muted-stone);
+  --accent: var(--amber-hush);
+  --accent-foreground: var(--amber-deep);
+  --destructive: var(--brick-alert);
+  --destructive-foreground: var(--warm-parchment);
+  --border: var(--antique-linen);
+  --input: var(--antique-linen);
+  --ring: var(--burnt-amber);
 
-  --success: var(--green-600);
-  --success-foreground: var(--neutral-0);
-  --warning: var(--yellow-600);
-  --warning-foreground: var(--neutral-0);
-  --unread-indicator: var(--blue-600);
-  --accent-subtle: var(--blue-50);
+  --success: var(--sage-read);
+  --success-foreground: var(--warm-parchment);
+  --warning: var(--honey-caution);
+  --warning-foreground: var(--warm-parchment);
+  --unread-indicator: var(--burnt-amber);
+  --accent-subtle: var(--amber-hush);
 
   --radius: 0.5rem;
 }
 
 .dark {
-  /* Remap semantics to dark-mode primitives. Primitives themselves don't change. */
-  --background: var(--neutral-1000);
-  --foreground: var(--neutral-150);
-  --card: var(--neutral-925);
-  --card-foreground: var(--neutral-150);
-  --popover: var(--neutral-925);
-  --popover-foreground: var(--neutral-150);
-  --primary: var(--blue-400);
-  --primary-foreground: var(--neutral-1000);
-  --secondary: var(--neutral-925);
-  --secondary-foreground: var(--neutral-150);
-  --muted: var(--neutral-850);
-  --muted-foreground: var(--neutral-600);
-  --accent: var(--neutral-850);
-  --accent-foreground: var(--neutral-150);
-  --destructive: var(--red-500);
-  --destructive-foreground: var(--neutral-1000);
-  --border: var(--neutral-800);
-  --input: var(--neutral-800);
-  --ring: var(--blue-400);
+  /* Remap semantics to dark-mode primitives. Primitives themselves don't change.
+     --primary remaps to --amber-glow (not --burnt-amber) to maintain WCAG AA
+     contrast against --midnight-slate; see ADR-0004 documented ambiguity. */
+  --background: var(--midnight-slate);
+  --foreground: var(--cream-mist);
+  --card: var(--charcoal-mist);
+  --card-foreground: var(--cream-mist);
+  --popover: var(--charcoal-mist);
+  --popover-foreground: var(--cream-mist);
+  --primary: var(--amber-glow);
+  --primary-foreground: var(--midnight-slate);
+  --secondary: var(--charcoal-mist);
+  --secondary-foreground: var(--bone);
+  --muted: var(--smoke-veil);
+  --muted-foreground: var(--ash-stone);
+  --accent: var(--dusk-mauve);
+  --accent-foreground: var(--cream-mist);
+  --destructive: var(--brick-alert);
+  --destructive-foreground: var(--warm-parchment);
+  --border: var(--smoke-veil);
+  --input: var(--smoke-veil);
+  --ring: var(--amber-glow);
 
-  --success: var(--green-500);
-  --success-foreground: var(--neutral-1000);
-  --warning: var(--yellow-500);
-  --warning-foreground: var(--neutral-1000);
-  --unread-indicator: var(--blue-400);
-  --accent-subtle: var(--blue-950);
+  /* Success/warning/destructive foregrounds stay at warm-parchment in dark mode
+     (rather than cream-mist) because cream-mist fails AA against honey-caution.
+     Warm-parchment passes AA against all three feedback backgrounds in both modes. */
+  --success: var(--sage-read);
+  --success-foreground: var(--warm-parchment);
+  --warning: var(--honey-caution);
+  --warning-foreground: var(--warm-parchment);
+  --unread-indicator: var(--amber-glow);
+  --accent-subtle: var(--dusk-mauve);
 }
 
 @theme inline {
