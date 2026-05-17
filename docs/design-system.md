@@ -30,7 +30,9 @@ Canonical names follow shadcn's vocabulary. Values come from the Frontpage brand
 | `--input` | `--color-border` | `#E1E4E8` | `#30363D` | `border-input` |
 | `--ring` | `--color-accent` | `#2563EB` | `#58A6FF` | `focus-visible:ring-ring` |
 | `--success` (custom) | `--color-success` | `#16A34A` | `#3FB950` | `bg-success`, `text-success` |
+| `--success-foreground` (custom) | text-on-success | `#FFFFFF` | `#0D1117` | `text-success-foreground` |
 | `--warning` (custom) | `--color-warning` | `#CA8A04` | `#D29922` | `bg-warning`, `text-warning` |
+| `--warning-foreground` (custom) | text-on-warning | `#FFFFFF` | `#0D1117` | `text-warning-foreground` |
 | `--unread-indicator` (custom) | `--color-unread-indicator` | `#2563EB` | `#58A6FF` | `bg-unread-indicator` |
 | `--accent-subtle` (custom) | `--color-accent-subtle` | `#EFF6FF` | `#1A2332` | `bg-accent-subtle` |
 
