@@ -40,14 +40,14 @@ const figmaCtx = await Figma.get_design_context(nodeId);
 
 // 2. Resolve to a component via metadata
 const { meta } = await import(
-  `@/components/${figmaCtx.componentName}/${figmaCtx.componentName}.meta`
+  `@/components/${figmaCtx.componentName}/${figmaCtx.componentName}.meta.ts`
 );
 
 // 3. Pick variant from selectionCriteria, honor relationships
 const variant = meta.aiHints.selectionCriteria[figmaCtx.intent];
 ```
 
-To wire Figma → metadata, populate `component.figma.nodeId` in each `.meta.ts`. The template leaves it as `nodeId: null`; fill it in when the Figma node stabilizes.
+To wire Figma → metadata, populate `meta.component.figma.nodeId` in each `.meta.ts` (note: `figma` lives under `component`, not at the top of `meta`). The template leaves it as `nodeId: null`; fill it in when the Figma node stabilizes.
 
 ---
 
