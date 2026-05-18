@@ -96,7 +96,7 @@ These follow the shadcn vocabulary established in [ADR-0002](docs/adr/0002-desig
 
 Note that `--primary`, `--ring`, and `--unread-indicator` all resolve to the same accent. This is deliberate: the eye trains on one color across the product to mean _"this wants your attention."_
 
-The feedback foregrounds (`--success-foreground`, `--warning-foreground`, `--destructive-foreground`) stay at **Warm Parchment in both modes** rather than swapping to Cream Mist in dark. Cream Mist fails WCAG AA contrast against Honey Caution (#8C691F), and using inconsistent foregrounds across the three feedback colors would be more confusing than the slight aesthetic inconsistency of using the lighter cream in dark mode for feedback surfaces only.
+The feedback foregrounds (`--success-foreground`, `--warning-foreground`, `--destructive-foreground`) stay at **Warm Parchment in both modes** rather than swapping to Cream Mist in dark. Cream Mist fails WCAG AA contrast against Honey Caution (#8C691F), so keeping all three feedback foregrounds at Warm Parchment yields consistent AA coverage across success, warning, and destructive surfaces in both light and dark modes without per-token exceptions.
 
 ## 3. Typography Rules
 
