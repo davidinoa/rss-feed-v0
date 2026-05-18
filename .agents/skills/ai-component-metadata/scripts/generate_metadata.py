@@ -18,6 +18,7 @@ Output:
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import sys
 from pathlib import Path
@@ -110,8 +111,9 @@ def emit_meta(
 
     if props:
         prop_lines = "\n".join(
-            f'    {k}: {{ type: "{v["type"]}", required: {str(v["required"]).lower()}, '
-            f'description: "{v["description"]}" }},'
+            f"    {k}: {{ type: {json.dumps(v['type'])}, "
+            f"required: {str(v['required']).lower()}, "
+            f"description: {json.dumps(v['description'])} }},"
             for k, v in props.items()
         )
     else:
@@ -120,17 +122,18 @@ def emit_meta(
     if axes:
         axis_chunks: list[str] = []
         for axis, values in axes.items():
-            quoted = ", ".join(f'"{v}"' for v in values)
+            quoted = ", ".join(json.dumps(v) for v in values)
             axis_chunks.append(f"      {axis}: [{quoted}] as const,")
         axis_lines = "\n".join(axis_chunks)
 
         purpose_chunks: list[str] = []
         for axis, values in axes.items():
             for v in values:
-                purpose_chunks.append(f'      "{axis}.{v}": "TODO: when to use",')
+                key = json.dumps(f"{axis}.{v}")
+                purpose_chunks.append(f'      {key}: "TODO: when to use",')
         purpose_lines = "\n".join(purpose_chunks)
     else:
-        axis_lines = "      // TODO: declare variant axes (e.g. appearance × size × density)"
+        axis_lines = "      // TODO: declare variant axes (e.g. appearance x size x density)"
         purpose_lines = "      // TODO: explain when to pick each axis value"
 
     return f'''import type {{ ComponentMeta }} from "{meta_types_import}";
@@ -225,6 +228,9 @@ def main() -> None:
     name_match = re.search(
         r"export\s+(?:const|function|default\s+function)\s+(\w+)", content
     )
+    if not name_match:
+        # Fallback: `export default Button;` (named identifier re-export).
+        name_match = re.search(r"export\s+default\s+(\w+)\s*;?", content)
     if not name_match:
         print(f"Error: could not find an exported component in {src}", file=sys.stderr)
         sys.exit(1)
