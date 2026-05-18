@@ -16,17 +16,22 @@ const buttonVariants = cva(
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
         // Ghost: transparent → Amber Hush on hover. Default for toolbar
-        // actions and inline controls.
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        // actions and inline controls. Text color stays inherited (no
+        // hover:text-accent-foreground) so only the background shifts —
+        // consistent with the comment and with the "restrained feedback"
+        // principle from DESIGN.md §4.
+        ghost: 'hover:bg-accent',
         // Destructive: Brick Alert bg, Warm Parchment text. Reserved for
         // confirmed delete/unsubscribe actions (never one-click).
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90 focus-visible:ring-destructive',
         // Outline: 1px hairline border, transparent bg. Hover fills with
         // Amber Hush. Used for tertiary actions that need more presence
-        // than ghost but less than secondary.
+        // than ghost but less than secondary. bg-transparent (not
+        // bg-background) so the button blends with its container — e.g.
+        // sits over bg-card without forcing parchment-on-vellum.
         outline:
-          'border border-input bg-background hover:bg-accent hover:text-accent-foreground',
+          'border border-input bg-transparent hover:bg-accent hover:text-accent-foreground',
         // Link: transparent, Burnt Amber text with underline-on-hover.
         link: 'text-primary underline-offset-4 hover:underline',
       },
