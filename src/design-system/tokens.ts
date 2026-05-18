@@ -16,6 +16,18 @@ export type RadiusToken = {
   utility: string
 }
 
+export type TypographyToken = {
+  name: string
+  utility: string
+  family: 'serif' | 'sans' | 'mono'
+  sizeLabel: string
+  fontWeight: number
+  lineHeight: number
+  letterSpacing: string
+  description: string
+  sample: string
+}
+
 export const PRIMITIVE_COLOR_TOKENS = [
   // Warm light neutrals — parchment scale, used by light-mode semantics.
   { name: 'warm-parchment', category: 'neutral-light' },
@@ -240,3 +252,157 @@ export const RADIUS_TOKENS = [
   { name: 'radius-lg', utility: 'rounded-lg' },
   { name: 'radius-xl', utility: 'rounded-xl' },
 ] as const satisfies readonly RadiusToken[]
+
+export const TYPOGRAPHY_TOKENS = [
+  // Display tier — Source Serif 4. Used for headings 24px+, reading-view titles.
+  {
+    name: 'display-xl',
+    utility: 'text-display-xl',
+    family: 'serif',
+    sizeLabel: '3.5rem · 56px',
+    fontWeight: 400,
+    lineHeight: 1.05,
+    letterSpacing: '-0.02em',
+    description: 'Hero headlines, reading-view article titles.',
+    sample: 'The quiet reading room',
+  },
+  {
+    name: 'display-l',
+    utility: 'text-display-l',
+    family: 'serif',
+    sizeLabel: '2.5rem · 40px',
+    fontWeight: 400,
+    lineHeight: 1.1,
+    letterSpacing: '-0.015em',
+    description: 'Page-level H1, primary section headers.',
+    sample: 'A library, not a dashboard',
+  },
+  {
+    name: 'display-m',
+    utility: 'text-display-m',
+    family: 'serif',
+    sizeLabel: '1.875rem · 30px',
+    fontWeight: 500,
+    lineHeight: 1.2,
+    letterSpacing: '-0.01em',
+    description: 'Article titles in feed cards.',
+    sample: 'Editorial calm at every scroll',
+  },
+  {
+    name: 'display-s',
+    utility: 'text-display-s',
+    family: 'serif',
+    sizeLabel: '1.5rem · 24px',
+    fontWeight: 500,
+    lineHeight: 1.25,
+    letterSpacing: '0',
+    description: 'Feed names in the subscription list, dialog titles.',
+    sample: 'Subscribed feeds',
+  },
+
+  // UI tier — Inter. Used for any heading below 24px and all body copy.
+  {
+    name: 'title-l',
+    utility: 'text-title-l',
+    family: 'sans',
+    sizeLabel: '1.25rem · 20px',
+    fontWeight: 500,
+    lineHeight: 1.4,
+    letterSpacing: '0',
+    description: 'Card titles, sidebar group headers.',
+    sample: 'Recent reading activity',
+  },
+  {
+    name: 'title-m',
+    utility: 'text-title-m',
+    family: 'sans',
+    sizeLabel: '1.125rem · 18px',
+    fontWeight: 500,
+    lineHeight: 1.4,
+    letterSpacing: '0',
+    description: 'Settings section headers.',
+    sample: 'Reading preferences',
+  },
+  {
+    name: 'title-s',
+    utility: 'text-title-s',
+    family: 'sans',
+    sizeLabel: '1rem · 16px',
+    fontWeight: 500,
+    lineHeight: 1.5,
+    letterSpacing: '0',
+    description: 'Small headers, primary button labels.',
+    sample: 'Add Feed',
+  },
+  {
+    name: 'body-l',
+    utility: 'text-body-l',
+    family: 'sans',
+    sizeLabel: '1.0625rem · 17px',
+    fontWeight: 400,
+    lineHeight: 1.7,
+    letterSpacing: '0',
+    description:
+      'Reading-view body. Line-height 1.7 is non-negotiable; do not change per-route.',
+    sample:
+      'Reading on a feed reader is different from skimming on a dashboard. The line-height does the work.',
+  },
+  {
+    name: 'body-m',
+    utility: 'text-body-m',
+    family: 'sans',
+    sizeLabel: '1rem · 16px',
+    fontWeight: 400,
+    lineHeight: 1.55,
+    letterSpacing: '0',
+    description: 'Default UI body text, feed item excerpts.',
+    sample:
+      'Default body text reads comfortably at sixteen pixels with a relaxed line-height.',
+  },
+  {
+    name: 'body-s',
+    utility: 'text-body-s',
+    family: 'sans',
+    sizeLabel: '0.875rem · 14px',
+    fontWeight: 400,
+    lineHeight: 1.5,
+    letterSpacing: '0',
+    description: 'Secondary copy, item metadata.',
+    sample: 'Secondary copy stays legible without competing.',
+  },
+  {
+    name: 'caption',
+    utility: 'text-caption',
+    family: 'sans',
+    sizeLabel: '0.8125rem · 13px',
+    fontWeight: 500,
+    lineHeight: 1.4,
+    letterSpacing: '0',
+    description: 'Timestamps, source attributions, reading time.',
+    sample: '3h ago · 5 min read',
+  },
+  {
+    name: 'caption-uppercase',
+    utility: 'text-caption-uppercase',
+    family: 'sans',
+    sizeLabel: '0.75rem · 12px',
+    fontWeight: 600,
+    lineHeight: 1.4,
+    letterSpacing: '0.08em',
+    description: 'Section labels (UNREAD, CATEGORY, source names above titles).',
+    sample: 'Unread · Newsletter',
+  },
+
+  // Mono tier — JetBrains Mono. Used inside reading-view code excerpts.
+  {
+    name: 'code',
+    utility: 'text-code',
+    family: 'mono',
+    sizeLabel: '0.875rem · 14px',
+    fontWeight: 400,
+    lineHeight: 1.65,
+    letterSpacing: '0',
+    description: 'Inline and block code in reading view.',
+    sample: 'const reader = createReader({ width: "64ch" })',
+  },
+] as const satisfies readonly TypographyToken[]
