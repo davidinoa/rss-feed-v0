@@ -389,7 +389,8 @@ export const TYPOGRAPHY_TOKENS = [
     fontWeight: 600,
     lineHeight: 1.4,
     letterSpacing: '0.08em',
-    description: 'Section labels (UNREAD, CATEGORY, source names above titles).',
+    description:
+      'Section labels (UNREAD, CATEGORY, source names above titles).',
     sample: 'Unread · Newsletter',
   },
 
