@@ -3,6 +3,7 @@ import {
   type PrimitiveColorToken,
   type RadiusToken,
   type SemanticColorToken,
+  type TypographyToken,
 } from './tokens'
 
 function readCssVariable(name: string): string {
@@ -207,6 +208,53 @@ export function RadiusScale({ tokens }: { tokens: readonly RadiusToken[] }) {
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
       {tokens.map((token) => (
         <RadiusCard key={token.name} token={token} />
+      ))}
+    </div>
+  )
+}
+
+/**
+ * All 14 typography utility class names listed once so Tailwind's source
+ * scanner detects them even though TypographyRow applies the class
+ * dynamically via the token's `utility` field.
+ *
+ * text-display-xl text-display-l text-display-m text-display-s
+ * text-title-l text-title-m text-title-s
+ * text-body-l text-body-m text-body-s
+ * text-caption text-caption-uppercase text-code
+ */
+const FAMILY_LABELS: Record<TypographyToken['family'], string> = {
+  serif: 'Source Serif 4',
+  sans: 'Inter',
+  mono: 'JetBrains Mono',
+}
+
+function TypographyRow({ token }: { token: TypographyToken }) {
+  return (
+    <section className="border-border flex flex-col gap-3 border-b py-5 last:border-0">
+      <p className={`text-foreground ${token.utility}`}>{token.sample}</p>
+      <div className="text-muted-foreground flex flex-col gap-1 font-mono text-xs">
+        <span className="text-foreground">{token.utility}</span>
+        <span>
+          {FAMILY_LABELS[token.family]} · {token.sizeLabel} · weight{' '}
+          {token.fontWeight} · line-height {token.lineHeight} · ls{' '}
+          {token.letterSpacing}
+        </span>
+      </div>
+      <p className="text-muted-foreground text-sm">{token.description}</p>
+    </section>
+  )
+}
+
+export function TypographyScale({
+  tokens,
+}: {
+  tokens: readonly TypographyToken[]
+}) {
+  return (
+    <div className="flex flex-col">
+      {tokens.map((token) => (
+        <TypographyRow key={token.name} token={token} />
       ))}
     </div>
   )

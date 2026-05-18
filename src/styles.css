@@ -1,4 +1,6 @@
 @import 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
+@import '@fontsource-variable/source-serif-4';
+@import '@fontsource-variable/jetbrains-mono';
 @import 'tailwindcss';
 @plugin "@tailwindcss/typography";
 
@@ -161,7 +163,111 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: Georgia, 'Charter', serif;
+  --font-serif:
+    'Source Serif 4 Variable', 'Source Serif 4', Charter, Georgia, serif;
+  --font-mono:
+    'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo,
+    Monaco, monospace;
+}
+
+/* Typography utilities — DESIGN.md §3 named scale. Each utility bundles
+   font-family + size + weight + line-height + letter-spacing as one
+   indivisible decision. Never assemble equivalents from raw text-* /
+   font-* utilities. */
+@utility text-display-xl {
+  font-family: var(--font-serif);
+  font-size: 3.5rem;
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+@utility text-display-l {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+@utility text-display-m {
+  font-family: var(--font-serif);
+  font-size: 1.875rem;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+@utility text-display-s {
+  font-family: var(--font-serif);
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+@utility text-title-l {
+  font-family: var(--font-sans);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+@utility text-title-m {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+@utility text-title-s {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+@utility text-body-l {
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+@utility text-body-m {
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.55;
+}
+
+@utility text-body-s {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+@utility text-caption {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+@utility text-caption-uppercase {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+@utility text-code {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.65;
 }
 
 * {
