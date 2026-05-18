@@ -33,7 +33,11 @@ for (const file of files) {
     }
   }
 
-  // 2. Every tokens.* key is component-scoped (kebab-case of component name)
+  // 2. Every tokens.* key matches the project's token convention.
+  // Pick ONE of these checks based on your architecture — see
+  // agentic-design-systems → "Token architecture variants".
+
+  // 2A. Component-scoped: tokens start with kebab-case of component name.
   const prefix = meta.component.name.toLowerCase();
   for (const group of Object.values(meta.tokens)) {
     for (const key of Object.keys(group ?? {})) {
@@ -42,6 +46,23 @@ for (const file of files) {
       }
     }
   }
+
+  // 2B. Semantic palette (shadcn / Tailwind v4): tokens must come from an
+  // allowlist of approved semantic utilities. Replace SEMANTIC_TOKENS with
+  // the set your project exposes; comment out 2A above when using 2B.
+  //
+  // const SEMANTIC_TOKENS = new Set([
+  //   "bg-primary", "bg-secondary", "bg-card", "bg-muted", "bg-destructive",
+  //   "text-foreground", "text-muted-foreground", "text-primary-foreground",
+  //   // ... extend to match your project
+  // ]);
+  // for (const group of Object.values(meta.tokens)) {
+  //   for (const key of Object.keys(group ?? {})) {
+  //     if (!SEMANTIC_TOKENS.has(key)) {
+  //       errors.push(`${file}: token "${key}" not in semantic allowlist`);
+  //     }
+  //   }
+  // }
 
   // 3. antiPatterns non-empty when priority === "high"
   if (meta.aiHints.priority === "high" && meta.aiHints.usage.antiPatterns.length === 0) {

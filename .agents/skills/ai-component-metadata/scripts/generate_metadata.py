@@ -171,8 +171,13 @@ export const meta: ComponentMeta = {{
   }},
 
   tokens: {{
-    // Component-scoped tokens only. Keys MUST start with "{prefix}-".
-    // Encode states in the name: "{prefix}-primary-bg-hover".
+    // Two valid patterns (pick whichever matches your project — see
+    // agentic-design-systems → Token architecture variants):
+    //   1. Component-scoped: keys start with "{prefix}-"; states in the name
+    //      (e.g. "{prefix}-primary-bg-hover"). Default for greenfield.
+    //   2. Semantic palette: keys are the semantic utilities the component
+    //      consumes (e.g. "bg-primary"); state lives in interaction modifiers
+    //      ("hover:bg-primary/90"). Default for shadcn / Tailwind v4.
     color: {{}},
     spacing: {{}},
     typography: {{}},

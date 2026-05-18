@@ -44,6 +44,15 @@ Plus `aiHints` — the meta layer that tells an agent *when* to use the componen
 - **Accessibility folds into Relationships.** ARIA `role`, `keyboardSupport`, and `screenReader` describe how the component fits into the document and interaction model — that's relational. No separate a11y pillar.
 - **Anti-patterns are first-class and structured.** Never prose. Always `{scenario, reason, alternative}` triples — they force precision.
 
+### Token architecture variants
+
+The "states live in tokens" decision above has two valid implementations. Both satisfy the underlying goals (states discoverable from metadata, tokens consumed by the component enumerable in `meta.tokens`); they spell it differently.
+
+- **Component-scoped state tokens** (default). Each state is its own token: `button-primary-bg`, `button-primary-bg-hover`, `button-primary-bg-disabled`. `meta.tokens.color` lists every state variant. Theming = swap the values behind those tokens. Best for greenfield projects that own their token tree.
+- **Semantic tokens + interaction modifiers.** Components consume a shared semantic palette (`bg-primary`, `text-muted-foreground`) and express states via interaction modifiers (`hover:bg-primary/90` in Tailwind, `:hover` selectors elsewhere). `meta.tokens.color` lists the semantic utilities the component consumes; state behavior is implicit in the modifier convention. Common in shadcn / Tailwind v4 / Radix-themed projects.
+
+The schema (relationships, variants, aiHints) is unchanged either way; only the [validator's](#step-9--metadata-validator) token-scoping check needs to swap between a kebab-case prefix and a project-specific allowlist of semantic utilities.
+
 ---
 
 ## The schema (canonical contract)
@@ -166,7 +175,7 @@ Build with a script (`scripts/build-index.ts`) that walks every `*.meta.ts`, dyn
 A short script (`scripts/validate-metadata.ts`) walks every `*.meta.ts` (via fast-glob), dynamically imports each one, shape-checks the export, and asserts:
 
 - Every variant axis cell appears in `aiHints.selectionCriteria` or `variants.purpose`
-- Every `tokens.*` key is component-scoped (kebab-case of the component name)
+- Every `tokens.*` key matches the project's token convention — either component-scoped (kebab-case of component name) or matches a declared allowlist of semantic utilities (see [Token architecture variants](#token-architecture-variants))
 - `antiPatterns` is non-empty for `priority: "high"` components
 - `relationships.role` / `keyboardSupport` / `screenReader` are non-empty (enforces the "a11y folds into Relationships" decision)
 - `invalidCombinations` references only declared axis values
@@ -188,8 +197,8 @@ Don't switch over at the end — switch per-component as parity is reached.
 - **Direct imports, no barrels.** One canonical path per component. Two ways in means the agent picks wrong.
 - **Co-locate everything.** Component, metadata, tokens, stories, tests — one folder.
 - **Anti-patterns drive design.** Write them first. They reveal the contract.
-- **Component-scoped tokens.** Never reference raw global tokens from a component's CSS.
-- **States live in tokens.** No `states` block. No `behavior.states` array.
+- **Tokens are enumerable.** Every token a component consumes is listed in `meta.tokens`. Default to component-scoped tokens; semantic-token systems are a documented variant — see [Token architecture variants](#token-architecture-variants).
+- **States are introspectable from metadata.** No `states` block in `ComponentMeta`. Encode states in token names (component-scoped pattern) or in interaction modifiers (semantic pattern).
 - **A11y is relational.** It belongs in Relationships, not its own pillar.
 - **The schema is the contract.** Validator runs in CI; failing metadata fails the build.
 
