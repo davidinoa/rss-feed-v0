@@ -20,6 +20,8 @@ Single-context (one `CONTEXT.md` + `docs/adr/` at the repo root). See `docs/agen
 
 shadcn + Tailwind v4 + Storybook 10. Visual spec (palette, type scale, component design intent) in [`DESIGN.md`](DESIGN.md) at the repo root. Engineering reference (file naming, shadcn install, stories, dark mode, a11y) in [`docs/design-system.md`](docs/design-system.md). Read both once before your first UI PR.
 
+For new components, also produce a colocated `<name>.meta.ts` per [`docs/design-system.md` § Component metadata for AI agents](docs/design-system.md#component-metadata-for-ai-agents) — uses the `agentic-design-systems` + `ai-component-metadata` skill pair.
+
 ## Deployment
 
 Cloudflare Workers via Workers Build (GitHub integration). `VITE_*` env vars are **build-time inlined** — set them as build-time variables in the Cloudflare dashboard, not as `wrangler secret put` runtime secrets. See [`docs/deploy.md`](docs/deploy.md) for the full flow, gotchas, and warning explanations.

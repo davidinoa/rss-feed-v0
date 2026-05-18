@@ -84,3 +84,37 @@ Two enforcement layers:
     - Touch targets are at least 44×44 px on mobile.
 
 When in doubt, check whether axe catches it in a story — if not, add a story for the variant in question.
+
+## Component metadata for AI agents
+
+Every new component (and every new variant on an existing one) ships with a co-located `<name>.meta.ts` describing it in a machine-readable shape. AI agents read these files to pick the right component for a prose request — variant, relationships, anti-patterns — without inventing patterns.
+
+Two skills wire this up:
+
+- [`agentic-design-systems`](../.agents/skills/agentic-design-systems/SKILL.md) — the canonical `ComponentMeta` schema, build workflow, and validator spec.
+- [`ai-component-metadata`](../.agents/skills/ai-component-metadata/SKILL.md) — the per-component producer; ships a Python scaffolder and a worked Button template.
+
+### Workflow when adding a component
+
+1. Build the component as usual (shadcn install, or new file per the conventions above).
+2. Scaffold the metadata:
+   ```sh
+   python .agents/skills/ai-component-metadata/scripts/generate_metadata.py src/components/ui/<name>.tsx
+   ```
+   Emits `<name>.meta.ts` with `component` / `props` / `variants.axes` filled and `// TODO` placeholders for the rest. Or copy [`metadata-template.ts`](../.agents/skills/ai-component-metadata/assets/metadata-template.ts) and adapt by hand.
+3. Hand-fill `aiHints.usage.antiPatterns` first — the `{scenario, reason, alternative}` triples often reveal missing variants or relationships before they bite.
+4. Wire `meta.tokens` to this repo's tiered semantic tokens (`bg-primary`, `text-muted-foreground`, etc.) — the **semantic-palette** variant in [Token architecture variants](../.agents/skills/agentic-design-systems/SKILL.md#token-architecture-variants). State is carried by Tailwind opacity modifiers per [ADR-0003](adr/0003-tiered-color-tokens.md); don't invent `--<name>-state-*` tokens.
+
+### One-time setup
+
+If this is the first component getting metadata, copy the canonical contract once:
+
+```sh
+cp .agents/skills/ai-component-metadata/assets/meta.types.ts src/components/meta.types.ts
+```
+
+Every `<name>.meta.ts` imports `ComponentMeta` from this file.
+
+### Retrofitting existing components
+
+Don't open standalone "add metadata to X" PRs. Retrofit as you touch each component for other reasons. Mark less-trafficked primitives as `priority: "medium"` or `"low"` — the validator only requires `antiPatterns` for `priority: "high"`.
