@@ -45,7 +45,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
         <HeadContent />
       </head>
-      <body className="bg-background text-foreground font-sans antialiased [overflow-wrap:anywhere] selection:bg-primary/20">
+      <body className="bg-background text-foreground font-sans antialiased break-words selection:bg-primary/20">
         <ClerkProvider>
           <ConvexProvider>
             <Header />

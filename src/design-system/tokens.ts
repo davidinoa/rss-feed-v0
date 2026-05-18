@@ -16,6 +16,19 @@ export type RadiusToken = {
   utility: string
 }
 
+export type SpacingToken = {
+  name: string
+  sizeLabel: string
+  utilityHint: string
+  description: string
+}
+
+export type DepthToken = {
+  name: string
+  utility: string
+  description: string
+}
+
 export type TypographyToken = {
   name: string
   utility: string
@@ -252,6 +265,78 @@ export const RADIUS_TOKENS = [
   { name: 'radius-lg', utility: 'rounded-lg' },
   { name: 'radius-xl', utility: 'rounded-xl' },
 ] as const satisfies readonly RadiusToken[]
+
+export const SPACING_TOKENS = [
+  {
+    name: 'space-2xs',
+    sizeLabel: '0.25rem · 4px',
+    utilityHint: 'p-1 / gap-1 / m-1',
+    description: 'Adjacent inline items.',
+  },
+  {
+    name: 'space-xs',
+    sizeLabel: '0.5rem · 8px',
+    utilityHint: 'p-2 / gap-2 / m-2',
+    description: 'Closely related elements.',
+  },
+  {
+    name: 'space-sm',
+    sizeLabel: '0.75rem · 12px',
+    utilityHint: 'p-3 / gap-3 / m-3',
+    description: 'Within a tight cluster.',
+  },
+  {
+    name: 'space-md',
+    sizeLabel: '1rem · 16px',
+    utilityHint: 'p-4 / gap-4 / m-4',
+    description: 'Default component padding.',
+  },
+  {
+    name: 'space-lg',
+    sizeLabel: '1.5rem · 24px',
+    utilityHint: 'p-6 / gap-6 / m-6',
+    description: 'Between distinct elements.',
+  },
+  {
+    name: 'space-xl',
+    sizeLabel: '2rem · 32px',
+    utilityHint: 'p-8 / gap-8 / m-8',
+    description: 'Between subsections.',
+  },
+  {
+    name: 'space-2xl',
+    sizeLabel: '3rem · 48px',
+    utilityHint: 'p-12 / gap-12 / m-12',
+    description: 'Between major page sections.',
+  },
+  {
+    name: 'space-3xl',
+    sizeLabel: '5rem · 80px',
+    utilityHint: 'p-20 / gap-20 / m-20',
+    description: 'Reading-view top/bottom padding.',
+  },
+] as const satisfies readonly SpacingToken[]
+
+export const DEPTH_TOKENS = [
+  {
+    name: 'shadow-flat',
+    utility: 'shadow-flat',
+    description:
+      'Level 0 — flat. The default for the canvas, sidebar, and most surfaces. Resolves to box-shadow: none.',
+  },
+  {
+    name: 'shadow-hairline',
+    utility: 'shadow-hairline',
+    description:
+      'Level 1 — 1px outset hairline using --border. For cards, dividers, container edges. Preferred over drop shadows; does not shift layout the way a 1px border would.',
+  },
+  {
+    name: 'shadow-floating',
+    utility: 'shadow-floating',
+    description:
+      'Level 2 — soft drop shadow for popovers, dialogs, command palette, and the mobile drawer. Used sparingly. In dark mode, pair with a 1px hairline border so the edge stays defined.',
+  },
+] as const satisfies readonly DepthToken[]
 
 export const TYPOGRAPHY_TOKENS = [
   // Display tier — Source Serif 4. Used for headings 24px+, reading-view titles.

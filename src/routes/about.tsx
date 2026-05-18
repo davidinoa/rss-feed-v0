@@ -14,7 +14,7 @@ function About() {
         <h1 className="text-foreground mb-3 text-4xl font-bold sm:text-5xl">
           A reader you can shape to your habits.
         </h1>
-        <p className="text-muted-foreground mb-4 max-w-3xl text-base leading-8">
+        <p className="text-muted-foreground text-body-m mb-4 max-w-3xl">
           rss-feed-v0 is a starter for building a personal RSS reader. The
           subscriptions, categories, and timeline you see are stand-ins for your
           own data model — swap the mock <code>src/lib/feeds.ts</code> out for a

@@ -1,8 +1,10 @@
 import * as React from 'react'
 import {
+  type DepthToken,
   type PrimitiveColorToken,
   type RadiusToken,
   type SemanticColorToken,
+  type SpacingToken,
   type TypographyToken,
 } from './tokens'
 
@@ -255,6 +257,69 @@ export function TypographyScale({
     <div className="flex flex-col">
       {tokens.map((token) => (
         <TypographyRow key={token.name} token={token} />
+      ))}
+    </div>
+  )
+}
+
+function SpacingRow({ token }: { token: SpacingToken }) {
+  const liveValue = useCssVariable(token.name)
+  return (
+    <section className="border-border flex flex-col gap-2 border-b py-4 last:border-0">
+      <div className="flex flex-wrap items-center gap-3">
+        <code className="text-foreground w-28 font-mono text-xs">
+          --{token.name}
+        </code>
+        <code className="text-muted-foreground w-32 font-mono text-xs">
+          {liveValue || token.sizeLabel}
+        </code>
+        <div
+          aria-hidden="true"
+          className="bg-primary h-3 rounded-sm"
+          style={{ width: `var(--${token.name})` }}
+        />
+      </div>
+      <div className="flex flex-col gap-1 pl-1">
+        <code className="text-muted-foreground font-mono text-xs">
+          {token.utilityHint}
+        </code>
+        <span className="text-muted-foreground text-sm">
+          {token.description}
+        </span>
+      </div>
+    </section>
+  )
+}
+
+export function SpacingScale({ tokens }: { tokens: readonly SpacingToken[] }) {
+  return (
+    <div className="flex flex-col">
+      {tokens.map((token) => (
+        <SpacingRow key={token.name} token={token} />
+      ))}
+    </div>
+  )
+}
+
+function DepthCard({ token }: { token: DepthToken }) {
+  return (
+    <div className="flex flex-col gap-3">
+      <div
+        className="bg-card text-card-foreground flex h-32 items-center justify-center rounded-lg p-6"
+        style={{ boxShadow: `var(--${token.name})` }}
+      >
+        <code className="font-mono text-xs">--{token.name}</code>
+      </div>
+      <p className="text-muted-foreground text-sm">{token.description}</p>
+    </div>
+  )
+}
+
+export function DepthScale({ tokens }: { tokens: readonly DepthToken[] }) {
+  return (
+    <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      {tokens.map((token) => (
+        <DepthCard key={token.name} token={token} />
       ))}
     </div>
   )
