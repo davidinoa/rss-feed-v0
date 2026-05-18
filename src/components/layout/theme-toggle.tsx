@@ -38,7 +38,7 @@ export default function ThemeToggle() {
   return (
     <Button
       variant="ghost"
-      size="sm"
+      size="xs"
       onClick={handleClick}
       aria-label={label}
       title={label}

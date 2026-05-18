@@ -22,16 +22,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: [
-        'default',
-        'xs',
-        'sm',
-        'lg',
-        'icon',
-        'icon-xs',
-        'icon-sm',
-        'icon-lg',
-      ],
+      options: ['default', 'xs', 'lg', 'icon'],
     },
     asChild: { control: false },
   },
@@ -64,35 +55,72 @@ export const Link: Story = {
   args: { variant: 'link', children: 'Read more' },
 }
 
+export const Disabled: Story = {
+  args: { disabled: true },
+}
+
+export const AllVariants: Story = {
+  render: () => (
+    <div className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="default">Default</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+        <Button variant="link">Link</Button>
+      </div>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="default" disabled>
+          Default
+        </Button>
+        <Button variant="secondary" disabled>
+          Secondary
+        </Button>
+        <Button variant="outline" disabled>
+          Outline
+        </Button>
+        <Button variant="ghost" disabled>
+          Ghost
+        </Button>
+        <Button variant="destructive" disabled>
+          Destructive
+        </Button>
+        <Button variant="link" disabled>
+          Link
+        </Button>
+      </div>
+    </div>
+  ),
+}
+
 export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-3">
-      <Button size="sm">Small</Button>
-      <Button size="default">Default</Button>
-      <Button size="lg">Large</Button>
+      <Button size="xs">Compact (32px)</Button>
+      <Button size="default">Default (40px)</Button>
+      <Button size="lg">Large (48px)</Button>
+      <Button size="icon" aria-label="Settings">
+        <Settings />
+      </Button>
     </div>
   ),
 }
 
-export const IconSizes: Story = {
+export const FocusRingPreview: Story = {
   render: () => (
-    <div className="flex items-center gap-3">
-      <Button size="icon-xs" aria-label="Open settings (icon-xs)">
-        <Settings />
-      </Button>
-      <Button size="icon-sm" aria-label="Open settings (icon-sm)">
-        <Settings />
-      </Button>
-      <Button size="icon" aria-label="Open settings (icon)">
-        <Settings />
-      </Button>
-      <Button size="icon-lg" aria-label="Open settings (icon-lg)">
-        <Settings />
-      </Button>
+    <div className="flex flex-col gap-2">
+      <p className="text-muted-foreground text-body-s">
+        Tab through these to see the 2px Burnt Amber focus ring with 2px offset.
+        The destructive variant uses the destructive color for its ring.
+      </p>
+      <div className="flex flex-wrap items-center gap-3">
+        <Button variant="default">Default</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="destructive">Destructive</Button>
+      </div>
     </div>
   ),
-}
-
-export const Disabled: Story = {
-  args: { disabled: true },
 }
