@@ -50,20 +50,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 7
-
-  convex-deploy:
-    name: Convex deploy
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    needs: [checks, e2e]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm convex:deploy
-        env:
-          CONVEX_DEPLOY_KEY: ${{ secrets.CONVEX_DEPLOY_KEY }}

@@ -6,16 +6,17 @@ Public URL: https://rss-feed-v0.davidinoa.workers.dev
 
 ## Environment variables
 
-The app reads two `VITE_*` env vars:
+The Cloudflare build needs these env vars:
 
 | Variable | Where to get it | Used by |
 | --- | --- | --- |
 | `VITE_CLERK_PUBLISHABLE_KEY` | [Clerk dashboard](https://dashboard.clerk.com) → API keys (`pk_test_…` or `pk_live_…`) | `src/integrations/clerk/provider.tsx` |
 | `VITE_CONVEX_URL` | Convex deployment URL (`https://<name>.convex.cloud`); run `pnpm convex:dev` once to provision | `src/integrations/convex/provider.tsx` |
+| `CONVEX_DEPLOY_KEY` | Convex dashboard → Settings → Deploy Keys → "Generate Production Deploy Key" | `pnpm convex:deploy` in the build command (encrypted) |
 
-### ⚠️ Build-time, not runtime
+### ⚠️ `VITE_*` is build-time, not runtime
 
-`VITE_*` vars are **inlined by Vite at build time** — they get replaced with literal strings inside `dist/server/index.js` during `vite build`. Whatever value is set in the environment when the build runs is permanently baked into the deployed bundle.
+`VITE_*` vars are **inlined by Vite at build time** — they get replaced with literal strings inside `dist/server/index.js` during `vite build`. Whatever value is set in the environment when the build runs is permanently baked into the deployed bundle. (`CONVEX_DEPLOY_KEY` is also consumed at build time, but by the Convex CLI — not inlined.)
 
 This means **`wrangler secret put` will not work for these vars**. Runtime secrets are only readable via `env.MY_SECRET` inside the Worker, not via `import.meta.env.VITE_*` in the bundle.
 
@@ -27,7 +28,7 @@ For Workers Build deploys (GitHub-connected):
 
 1. Cloudflare dashboard → **Workers & Pages → `rss-feed-v0` → Settings**
 2. Find the **Build** section (the one that shows the GitHub repo connection — *not* the Worker's runtime "Variables and Secrets" near the top)
-3. Under the Build config's **Variables and Secrets**, add both vars
+3. Under the Build config's **Variables and Secrets**, add all three (mark `CONVEX_DEPLOY_KEY` as encrypted)
 4. Click **Save** then trigger a redeploy (push any commit, or use **Retry deployment** on the failed build)
 
 ### Setting them locally
@@ -40,19 +41,17 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-## Convex deploy is currently separate
+## Convex deploy runs from the Cloudflare build
 
-The Cloudflare build runs `pnpm build && wrangler deploy` — it does **not** deploy Convex. The Convex backend (`convex/` directory) must be deployed separately:
+The Convex backend (`convex/`) is deployed as part of the same build that ships the Worker. The Cloudflare **Build command** is:
 
 ```sh
-# one-time: provision a prod deployment + get a deploy key
-pnpm convex:deploy
-
-# then for ongoing deploys, store CONVEX_DEPLOY_KEY in Cloudflare Build secrets
-# and prepend `pnpm convex:deploy &&` to the build command
+if [ "$WORKERS_CI_BRANCH" = "main" ]; then pnpm convex:deploy && pnpm build; else pnpm build; fi
 ```
 
-See follow-up task: "Wire Convex deploy into Cloudflare Build" for the full plan.
+`WORKERS_CI_BRANCH` is [injected by Workers Builds](https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#environment-variables). The gate keeps preview-branch builds from pushing branch-specific Convex functions into the prod deployment — only `main` builds touch Convex. Backend deploys before frontend so the Worker never references a function that doesn't exist yet.
+
+If `pnpm convex:deploy` fails on `main`, the build short-circuits and `wrangler deploy` doesn't run, leaving the previous Worker in place.
 
 ## Symptoms when env vars are missing
 
@@ -60,7 +59,7 @@ See follow-up task: "Wire Convex deploy into Cloudflare Build" for the full plan
 - Static assets (`/favicon.ico`, `/assets/*.js`) still return 200 — they're served before the SSR Worker runs
 - Root cause: `src/integrations/clerk/provider.tsx` explicitly throws in production when `VITE_CLERK_PUBLISHABLE_KEY` is empty (lines 25-28)
 
-If you hit this, the fix is always the same: confirm both build-time vars are set in the Workers Build configuration, then redeploy.
+If you hit this, the fix is always the same: confirm all build-time vars are set in the Workers Build configuration, then redeploy.
 
 ## Build warnings to know about
 
