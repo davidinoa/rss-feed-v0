@@ -49,7 +49,7 @@ Colors are organized in two tiers per [ADR-0003](docs/adr/0003-tiered-color-toke
 
 The entire product runs on one accent hue. Four steps cover the interaction states.
 
-- **Burnt Amber** (`#B8612D`) – The primary accent. Used for unread indicators, primary CTAs, hyperlinks, and the focus ring. Borrowed from the warmth of an aged book cover.
+- **Burnt Amber** (`#A85426`) – The primary accent. Used for unread indicators, primary CTAs, hyperlinks, and the focus ring. Borrowed from the warmth of an aged book cover.
 - **Amber Glow** (`#D67E45`) – Hover state for primary buttons and links. Lifted in luminance to read brighter without losing the amber character. _Also used as the dark-mode remap for `--primary`, since Burnt Amber on Midnight Slate falls short of WCAG AA at body sizes._
 - **Amber Hush** (`#F3E6D6`) – Soft tint background for selected rows, hovered cells, and inline highlights. Whispers presence without claiming attention.
 - **Amber Deep** (`#8E4A22`) – Pressed/active state, and the foreground color on Amber Hush surfaces.
@@ -58,9 +58,9 @@ The entire product runs on one accent hue. Four steps cover the interaction stat
 
 Used exclusively for system feedback. Never decorative.
 
-- **Sage Read** (`#5A7A5C`) – Success and "read" confirmations. A muted green that reads as quiet acknowledgment rather than vibrant celebration.
+- **Sage Read** (`#4F6E50`) – Success and "read" confirmations. A muted green that reads as quiet acknowledgment rather than vibrant celebration.
 - **Brick Alert** (`#A8443C`) – Destructive actions and error states. Earthy, warm-leaning red that sits in the palette rather than fighting it.
-- **Honey Caution** (`#B58A2D`) – Warning states. Muted amber-yellow, distinguishable from Burnt Amber by its yellower bias.
+- **Honey Caution** (`#8C691F`) – Warning states. Deep yellow-brown, distinguishable from Burnt Amber by its yellower bias.
 
 ### Semantics (Public API)
 
@@ -83,9 +83,11 @@ These follow the shadcn vocabulary established in [ADR-0002](docs/adr/0002-desig
 | `--accent` | Amber Hush | Dusk Mauve | Soft highlight surface |
 | `--accent-foreground` | Amber Deep | Cream Mist | Text on accent surface |
 | `--destructive` | Brick Alert | Brick Alert | Destructive actions |
-| `--destructive-foreground` | Warm Parchment | Cream Mist | Text on destructive |
+| `--destructive-foreground` | Warm Parchment | Warm Parchment | Text on destructive |
 | `--success` | Sage Read | Sage Read | Success state |
+| `--success-foreground` | Warm Parchment | Warm Parchment | Text on success |
 | `--warning` | Honey Caution | Honey Caution | Warning state |
+| `--warning-foreground` | Warm Parchment | Warm Parchment | Text on warning |
 | `--border` | Antique Linen | Smoke Veil | Hairline borders |
 | `--input` | Antique Linen | Smoke Veil | Form input borders |
 | `--ring` | Burnt Amber | Amber Glow | Focus ring |
@@ -93,6 +95,8 @@ These follow the shadcn vocabulary established in [ADR-0002](docs/adr/0002-desig
 | `--accent-subtle` | Amber Hush | Dusk Mauve | Cell-level highlight |
 
 Note that `--primary`, `--ring`, and `--unread-indicator` all resolve to the same accent. This is deliberate: the eye trains on one color across the product to mean _"this wants your attention."_
+
+The feedback foregrounds (`--success-foreground`, `--warning-foreground`, `--destructive-foreground`) stay at **Warm Parchment in both modes** rather than swapping to Cream Mist in dark. Cream Mist fails WCAG AA contrast against Honey Caution (#8C691F), so keeping all three feedback foregrounds at Warm Parchment yields consistent AA coverage across success, warning, and destructive surfaces in both light and dark modes without per-token exceptions.
 
 ## 3. Typography Rules
 
@@ -344,7 +348,7 @@ Until the foundation migration lands, semantic tokens like `bg-primary` resolve 
 
 Always pair the descriptive name with the hex code in design conversation; reference the semantic token in code.
 
-- Use **"Burnt Amber (#B8612D)"** in prose, **`bg-primary`** / **`text-primary`** in code.
+- Use **"Burnt Amber (#A85426)"** in prose, **`bg-primary`** / **`text-primary`** in code.
 - Use **"Warm Parchment (#FAF7F2)"** in prose, **`bg-background`** in code.
 - Use **"Soft Vellum (#F0EBE2)"** in prose, **`bg-card`** in code.
 - Use **"Muted Stone (#6B655D)"** in prose, **`text-muted-foreground`** in code.
@@ -360,7 +364,7 @@ Never hand-roll hex values inside component code. If a token doesn't exist for t
 
 - _Sidebar entry:_ "Add a sidebar feed entry: Body M Pebble text, 0.625rem vertical padding. Selected state shows Amber Hush background, Amber Deep text, and a 3px Burnt Amber bar on the left edge."
 
-- _Primary button:_ "Render a primary CTA button in Burnt Amber (#B8612D) with subtly rounded corners (8px), Warm Parchment text, 40px height, Title S weight. Hover shifts to Amber Glow (#D67E45) over 180ms."
+- _Primary button:_ "Render a primary CTA button in Burnt Amber (#A85426) with subtly rounded corners (8px), Warm Parchment text, 40px height, Title S weight. Hover shifts to Amber Glow (#D67E45) over 180ms."
 
 - _Card:_ "Create a content card with Soft Vellum background, gently rounded corners (12px), 1px Antique Linen hairline border, and 1.5rem internal padding. No shadow."
 

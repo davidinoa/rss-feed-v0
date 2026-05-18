@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Raw color palette — private to the token system. NOT exposed as Tailwind utilities. Semantic tokens reference these via var(...). Off-scale step numbers (--neutral-150, -850, -925) are intentional; see ADR-0003.',
+          'Raw color palette — private to the token system. NOT exposed as Tailwind utilities. Semantic tokens reference these via var(...). Named descriptively (warm-parchment, burnt-amber, ink-espresso) rather than by numeric step; see ADRs 0003 and 0004.',
       },
     },
   },
