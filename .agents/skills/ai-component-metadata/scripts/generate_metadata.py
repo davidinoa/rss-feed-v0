@@ -31,6 +31,7 @@ CATEGORY_HINTS: dict[str, tuple[str, ...]] = {
 
 
 def guess_category(name: str) -> str:
+    """Heuristic atoms/molecules/organisms classification from component name."""
     for category, hits in CATEGORY_HINTS.items():
         if any(h in name for h in hits):
             return category
@@ -38,6 +39,7 @@ def guess_category(name: str) -> str:
 
 
 def guess_type(content: str, name: str) -> str:
+    """Heuristic interactive/input/navigation/container/display classification from source."""
     if re.search(r"\b(onChange|onInput|onBlur)\b|\bvalue\s*:", content):
         return "input"
     if re.search(r"\b(onClick|onPress|onActivate)\b", content):
@@ -103,6 +105,7 @@ def emit_meta(
     axes: dict[str, list[str]],
     meta_types_import: str,
 ) -> str:
+    """Render the canonical ComponentMeta as TypeScript source, with TODOs for human fields."""
     prefix = name.lower()
 
     if props:
@@ -202,6 +205,7 @@ export const meta: ComponentMeta = {{
 
 
 def main() -> None:
+    """CLI entry: parse the source component, emit a scaffolded .meta.ts beside it."""
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("source", type=Path, help="Path to the component .tsx file")
     ap.add_argument(

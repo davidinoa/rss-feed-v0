@@ -41,23 +41,31 @@ The validator treats `mustBeChildOf` as a hard constraint: an agent that places 
 
 ## Slots: parent + child in two files
 
-The old `composition.slots` field is gone. Express slot relationships from both sides:
+The old `composition.slots` field is gone. Express slot relationships from both sides — the parent lists only **required** children in `mustBeParentOf`; optional children are expressed only from the child's side.
 
 ```ts
 // Card.meta.ts
 relationships: {
-  mustBeParentOf: ["CardHeader", "CardBody"],   // required slots
-  optionalSibling: ["CardFooter"],              // optional slot
+  mustBeParentOf: ["CardHeader", "CardBody"],   // required children
+  // CardFooter is optional — not listed here. It's expressed from the
+  // child side below via mustBeChildOf, which is enough for the agent
+  // to know CardFooter is only valid inside Card.
 }
 
-// CardHeader.meta.ts
+// CardHeader.meta.ts (required child)
 relationships: {
   mustBeChildOf: ["Card"],
   // CardHeader doesn't ship outside Card
 }
+
+// CardFooter.meta.ts (optional child — Card doesn't require it,
+// but CardFooter only makes sense inside Card)
+relationships: {
+  mustBeChildOf: ["Card"],
+}
 ```
 
-Two `.meta.ts` files mirror the relationship — the validator can cross-check.
+The validator cross-checks `mustBeParentOf` against the child's `mustBeChildOf`. Note: `optionalSibling` is for siblings (e.g. a Button next to another Button), not for optional children — don't reach for it here.
 
 ---
 

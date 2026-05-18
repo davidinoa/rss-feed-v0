@@ -1,5 +1,7 @@
-import type { ComponentMeta } from "../../meta.types";
-// ^ Adjust path to wherever you placed `meta.types.ts` in your project.
+import type { ComponentMeta } from "@/meta.types";
+// ^ Replace with the actual path to `meta.types.ts` in your project
+//   (e.g. "@/meta.types", "#/meta.types", "../../meta.types"). The "@/"
+//   here is a placeholder, not a working import.
 //   See agentic-design-systems → "The schema (canonical contract)".
 
 /**

@@ -129,7 +129,7 @@ Write `meta.types.ts` before any components. Everything else flows from it.
 ### Step 3 — Build one component end-to-end
 Pick something small and high-traffic. Button is canonical. Ship the full set together:
 
-```
+```text
 Button/
   Button.tsx              ← implementation
   Button.meta.ts          ← four pillars + aiHints

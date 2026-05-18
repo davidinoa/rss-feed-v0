@@ -14,7 +14,7 @@ If you're starting fresh or auditing the whole system, switch to `agentic-design
 
 ## Producer / consumer contract
 
-```
+```text
 ai-component-metadata    →    Button.meta.ts    →    agentic-design-systems
 (this skill)                  (the artifact)         (index, validator, agent runtime)
 ```

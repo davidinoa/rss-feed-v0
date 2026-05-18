@@ -38,7 +38,9 @@ for (const file of files) {
   // agentic-design-systems → "Token architecture variants".
 
   // 2A. Component-scoped: tokens start with kebab-case of component name.
-  const prefix = meta.component.name.toLowerCase();
+  const prefix = meta.component.name
+    .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
+    .toLowerCase();
   for (const group of Object.values(meta.tokens)) {
     for (const key of Object.keys(group ?? {})) {
       if (!key.startsWith(`${prefix}-`)) {
