@@ -1,4 +1,4 @@
-import { describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { parseFeed, validateAndParseFeed } from './feedValidator'
 
 const RSS_2_0 = `<?xml version="1.0"?>
@@ -223,6 +223,48 @@ describe('validateAndParseFeed — orchestration', () => {
       expect(result.error).toContain('too many redirects')
     }
   })
+
+  test('aborts the fetch once the 8s timeout fires', async () => {
+    vi.useFakeTimers()
+    try {
+      const seen: Array<AbortSignal | undefined> = []
+      const fetchMock = (
+        _input: RequestInfo | URL,
+        init?: RequestInit,
+      ): Promise<Response> => {
+        seen.push(init?.signal ?? undefined)
+        return new Promise<Response>((_, reject) => {
+          init?.signal?.addEventListener('abort', () => {
+            reject(new Error('aborted'))
+          })
+        })
+      }
+
+      const resultPromise = validateAndParseFeed(
+        'https://example.com/feed.xml',
+        { fetch: fetchMock },
+      )
+
+      // 7.999s in, the fetch is still pending.
+      await vi.advanceTimersByTimeAsync(7_999)
+      // Crossing 8.0s the AbortController fires and the fetch promise rejects.
+      await vi.advanceTimersByTimeAsync(2)
+
+      const result = await resultPromise
+      expect(result.ok).toBe(false)
+      if (!result.ok) {
+        expect(result.error).toBe('aborted')
+      }
+      expect(seen).toHaveLength(1)
+      expect(seen[0]?.aborted).toBe(true)
+    } finally {
+      vi.useRealTimers()
+    }
+  })
+})
+
+afterEach(() => {
+  vi.useRealTimers()
 })
 
 function mockResponse(
