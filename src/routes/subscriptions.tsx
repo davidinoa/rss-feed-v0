@@ -1,14 +1,13 @@
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
+import { isConvexConfigured } from '../integrations/convex/provider'
 
 export const Route = createFileRoute('/subscriptions')({
   component: SubscriptionsLayout,
 })
 
 function SubscriptionsLayout() {
-  const subscriptions = useQuery(api.subscriptions.list)
-
   return (
     <main className="page-wrap px-4 py-10">
       <header className="mb-8 flex items-end justify-between gap-4">
@@ -28,32 +27,53 @@ function SubscriptionsLayout() {
         </Link>
       </header>
 
-      {subscriptions === undefined ? (
-        <p className="text-muted-foreground text-sm">Loading…</p>
-      ) : subscriptions.length === 0 ? (
-        <p className="text-muted-foreground text-sm">
-          You haven't subscribed to anything yet.{' '}
-          <Link to="/subscriptions/add" className="underline">
-            Add your first.
-          </Link>
-        </p>
-      ) : (
-        <ul className="space-y-1">
-          {subscriptions.map((subscription) => {
-            const displayTitle =
-              subscription.customTitle ??
-              subscription.source?.title ??
-              '(Source unavailable)'
-            return (
-              <li key={subscription._id} className="text-foreground py-1">
-                {displayTitle}
-              </li>
-            )
-          })}
-        </ul>
-      )}
+      {isConvexConfigured ? <SubscriptionsList /> : <ConvexMissingNotice />}
 
       <Outlet />
     </main>
+  )
+}
+
+function SubscriptionsList() {
+  const subscriptions = useQuery(api.subscriptions.list)
+
+  if (subscriptions === undefined) {
+    return <p className="text-muted-foreground text-sm">Loading…</p>
+  }
+
+  if (subscriptions.length === 0) {
+    return (
+      <p className="text-muted-foreground text-sm">
+        You haven't subscribed to anything yet.{' '}
+        <Link to="/subscriptions/add" className="underline">
+          Add your first.
+        </Link>
+      </p>
+    )
+  }
+
+  return (
+    <ul className="space-y-1">
+      {subscriptions.map((subscription) => {
+        const displayTitle =
+          subscription.customTitle ??
+          subscription.source?.title ??
+          '(Source unavailable)'
+        return (
+          <li key={subscription._id} className="text-foreground py-1">
+            {displayTitle}
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
+function ConvexMissingNotice() {
+  return (
+    <p className="text-muted-foreground text-sm">
+      Backend not configured. Run <code>pnpm convex:dev</code> to provision a
+      deployment, then refresh.
+    </p>
   )
 }
