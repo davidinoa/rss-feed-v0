@@ -10,10 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TimelineRouteImport } from './routes/timeline'
-import { Route as FeedsRouteImport } from './routes/feeds'
+import { Route as SubscriptionsRouteImport } from './routes/subscriptions'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as FeedsAddRouteImport } from './routes/feeds.add'
+import { Route as SubscriptionsAddRouteImport } from './routes/subscriptions.add'
 import { Route as DemoConvexRouteImport } from './routes/demo/convex'
 import { Route as DemoClerkRouteImport } from './routes/demo/clerk'
 
@@ -22,9 +22,9 @@ const TimelineRoute = TimelineRouteImport.update({
   path: '/timeline',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FeedsRoute = FeedsRouteImport.update({
-  id: '/feeds',
-  path: '/feeds',
+const SubscriptionsRoute = SubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -37,10 +37,10 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const FeedsAddRoute = FeedsAddRouteImport.update({
+const SubscriptionsAddRoute = SubscriptionsAddRouteImport.update({
   id: '/add',
   path: '/add',
-  getParentRoute: () => FeedsRoute,
+  getParentRoute: () => SubscriptionsRoute,
 } as any)
 const DemoConvexRoute = DemoConvexRouteImport.update({
   id: '/demo/convex',
@@ -56,65 +56,65 @@ const DemoClerkRoute = DemoClerkRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/feeds': typeof FeedsRouteWithChildren
+  '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/timeline': typeof TimelineRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/convex': typeof DemoConvexRoute
-  '/feeds/add': typeof FeedsAddRoute
+  '/subscriptions/add': typeof SubscriptionsAddRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/feeds': typeof FeedsRouteWithChildren
+  '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/timeline': typeof TimelineRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/convex': typeof DemoConvexRoute
-  '/feeds/add': typeof FeedsAddRoute
+  '/subscriptions/add': typeof SubscriptionsAddRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/feeds': typeof FeedsRouteWithChildren
+  '/subscriptions': typeof SubscriptionsRouteWithChildren
   '/timeline': typeof TimelineRoute
   '/demo/clerk': typeof DemoClerkRoute
   '/demo/convex': typeof DemoConvexRoute
-  '/feeds/add': typeof FeedsAddRoute
+  '/subscriptions/add': typeof SubscriptionsAddRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/feeds'
+    | '/subscriptions'
     | '/timeline'
     | '/demo/clerk'
     | '/demo/convex'
-    | '/feeds/add'
+    | '/subscriptions/add'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/feeds'
+    | '/subscriptions'
     | '/timeline'
     | '/demo/clerk'
     | '/demo/convex'
-    | '/feeds/add'
+    | '/subscriptions/add'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/feeds'
+    | '/subscriptions'
     | '/timeline'
     | '/demo/clerk'
     | '/demo/convex'
-    | '/feeds/add'
+    | '/subscriptions/add'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  FeedsRoute: typeof FeedsRouteWithChildren
+  SubscriptionsRoute: typeof SubscriptionsRouteWithChildren
   TimelineRoute: typeof TimelineRoute
   DemoClerkRoute: typeof DemoClerkRoute
   DemoConvexRoute: typeof DemoConvexRoute
@@ -129,11 +129,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TimelineRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/feeds': {
-      id: '/feeds'
-      path: '/feeds'
-      fullPath: '/feeds'
-      preLoaderRoute: typeof FeedsRouteImport
+    '/subscriptions': {
+      id: '/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/subscriptions'
+      preLoaderRoute: typeof SubscriptionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -150,12 +150,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/feeds/add': {
-      id: '/feeds/add'
+    '/subscriptions/add': {
+      id: '/subscriptions/add'
       path: '/add'
-      fullPath: '/feeds/add'
-      preLoaderRoute: typeof FeedsAddRouteImport
-      parentRoute: typeof FeedsRoute
+      fullPath: '/subscriptions/add'
+      preLoaderRoute: typeof SubscriptionsAddRouteImport
+      parentRoute: typeof SubscriptionsRoute
     }
     '/demo/convex': {
       id: '/demo/convex'
@@ -174,20 +174,22 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface FeedsRouteChildren {
-  FeedsAddRoute: typeof FeedsAddRoute
+interface SubscriptionsRouteChildren {
+  SubscriptionsAddRoute: typeof SubscriptionsAddRoute
 }
 
-const FeedsRouteChildren: FeedsRouteChildren = {
-  FeedsAddRoute: FeedsAddRoute,
+const SubscriptionsRouteChildren: SubscriptionsRouteChildren = {
+  SubscriptionsAddRoute: SubscriptionsAddRoute,
 }
 
-const FeedsRouteWithChildren = FeedsRoute._addFileChildren(FeedsRouteChildren)
+const SubscriptionsRouteWithChildren = SubscriptionsRoute._addFileChildren(
+  SubscriptionsRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  FeedsRoute: FeedsRouteWithChildren,
+  SubscriptionsRoute: SubscriptionsRouteWithChildren,
   TimelineRoute: TimelineRoute,
   DemoClerkRoute: DemoClerkRoute,
   DemoConvexRoute: DemoConvexRoute,

@@ -9,33 +9,39 @@ test('home page renders the hero', async ({ page }) => {
   ).toBeVisible()
 })
 
-test('timeline lists articles from subscriptions', async ({ page }) => {
+test('timeline shows the placeholder until Article ingestion lands', async ({
+  page,
+}) => {
   await page.goto('/timeline')
   await expect(
-    page.getByRole('heading', { name: /latest from your subscriptions/i }),
+    page.getByRole('heading', { name: /coming up next/i }),
   ).toBeVisible()
   await expect(
-    page.getByText(/introducing tanstack intent/i).first(),
+    page.getByRole('link', { name: /manage subscriptions/i }),
   ).toBeVisible()
 })
 
-test('feeds page lists subscriptions and links to add flow', async ({
-  page,
-}) => {
-  await page.goto('/feeds')
-  await expect(page.getByRole('heading', { name: /your feeds/i })).toBeVisible()
-  await page.getByRole('link', { name: /\+ add feed/i }).click()
-  await expect(page).toHaveURL(/\/feeds\/add$/)
-  await expect(page.getByRole('heading', { name: /add a feed/i })).toBeVisible()
+test('subscriptions page links to the add flow', async ({ page }) => {
+  await page.goto('/subscriptions')
+  await expect(
+    page.getByRole('heading', { name: /your subscriptions/i }),
+  ).toBeVisible()
+  await page.getByRole('link', { name: /\+ add subscription/i }).click()
+  await expect(page).toHaveURL(/\/subscriptions\/add$/)
+  await expect(
+    page.getByRole('heading', { name: /add a subscription/i }),
+  ).toBeVisible()
 })
 
 // Passes locally but reliably fails on GitHub Actions ubuntu-latest —
 // see #9 for diagnosis and fix candidates.
-test.fixme('add feed form validates the URL field', async ({ page }) => {
-  await page.goto('/feeds/add')
-  const urlInput = page.getByRole('textbox', { name: /feed url/i })
+test.fixme('add subscription form validates the URL field', async ({
+  page,
+}) => {
+  await page.goto('/subscriptions/add')
+  const urlInput = page.getByRole('textbox', { name: /^url$/i })
   await urlInput.fill('not-a-url')
   await urlInput.blur()
-  await expect(page.getByRole('alert')).toHaveText(/must be a valid url/i)
+  await expect(page.getByRole('alert')).toContainText(/doesn’t look/i)
   await expect(page.getByRole('button', { name: /subscribe/i })).toBeDisabled()
 })

@@ -30,6 +30,23 @@ export function getStoredMode(): ThemeMode {
   return 'auto'
 }
 
+export function getResolvedTheme(): ResolvedTheme {
+  if (typeof document === 'undefined') return 'light'
+  return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+}
+
+export function subscribeToResolvedTheme(
+  listener: (theme: ResolvedTheme) => void,
+): () => void {
+  if (typeof document === 'undefined') return () => {}
+  const observer = new MutationObserver(() => listener(getResolvedTheme()))
+  observer.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['class'],
+  })
+  return () => observer.disconnect()
+}
+
 export function applyTheme(mode: ThemeMode): void {
   if (typeof window === 'undefined') return
 

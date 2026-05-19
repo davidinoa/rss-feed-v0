@@ -9,6 +9,7 @@ import { ReactQueryDevtoolsPanel } from '@tanstack/react-query-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/layout/footer'
 import Header from '../components/layout/header'
+import { Toaster } from '../components/ui/sonner'
 
 import ClerkProvider from '../integrations/clerk/provider'
 import ConvexProvider from '../integrations/convex/provider'
@@ -30,7 +31,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       {
         name: 'description',
         content:
-          'Subscribe to blogs and news sources, organize feeds into categories, and browse articles in a unified timeline.',
+          'Subscribe to blogs and news sources, organise your subscriptions into categories, and browse articles in a unified timeline.',
       },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
@@ -51,6 +52,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             <Header />
             {children}
             <Footer />
+            <Toaster />
             <TanStackDevtools
               config={{ position: 'bottom-right' }}
               plugins={[

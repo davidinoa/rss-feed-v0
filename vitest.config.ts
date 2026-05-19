@@ -27,6 +27,7 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: 'src',
           environment: 'jsdom',
           globals: true,
           setupFiles: ['./src/test/setup.ts'],
@@ -40,6 +41,24 @@ export default defineConfig({
             'dist',
           ],
           css: false,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'convex',
+          // edge-runtime is what convex-test requires; the canonical-url and
+          // feed-validator modules run cleanly under it too.
+          environment: 'edge-runtime',
+          include: ['convex/**/*.{test,spec}.ts'],
+          exclude: ['convex/_generated/**', 'node_modules'],
+          server: {
+            deps: {
+              // convex-test asks vitest to inline these so its module map
+              // (import.meta.glob) sees the live function source.
+              inline: ['convex-test'],
+            },
+          },
         },
       },
       {

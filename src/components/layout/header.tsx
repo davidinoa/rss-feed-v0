@@ -37,11 +37,11 @@ export default function Header() {
             Timeline
           </Link>
           <Link
-            to="/feeds"
+            to="/subscriptions"
             className={navLinkBase}
             activeProps={{ className: navLinkActive }}
           >
-            Feeds
+            Subscriptions
           </Link>
           <Link
             to="/about"
