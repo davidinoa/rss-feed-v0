@@ -34,8 +34,44 @@ test('subscriptions page links to the add flow', async ({ page }) => {
   ).toBeVisible()
 })
 
+test('subscriptions page shows a secondary state when there is nothing to read', async ({
+  page,
+}) => {
+  // The exact copy depends on whether VITE_CONVEX_URL is wired up:
+  //   - configured: empty-state ("You haven't subscribed to anything yet.")
+  //   - unconfigured (e.g. CI without Convex): fallback notice
+  //     ("Backend not configured. Run pnpm convex:dev…")
+  // The shell renders one of the two — asserting either catches a regression
+  // that removes both.
+  await page.goto('/subscriptions')
+  await expect(
+    page.getByText(/(haven['’]t subscribed|backend not configured)/i),
+  ).toBeVisible({ timeout: 15_000 })
+})
+
+test('header nav points at subscriptions, not feeds', async ({ page }) => {
+  await page.goto('/')
+  const nav = page.getByRole('navigation')
+  await expect(
+    nav.getByRole('link', { name: /^subscriptions$/i }),
+  ).toBeVisible()
+  await expect(nav.getByRole('link', { name: /^feeds$/i })).toHaveCount(0)
+})
+
+test('Sonner toast region is mounted at the app root', async ({ page }) => {
+  await page.goto('/')
+  // Sonner mounts a single live region for toast announcements; absence here
+  // means the Toaster was dropped from __root.tsx and success/error toasts
+  // would silently no-op.
+  await expect(
+    page.getByRole('region', { name: /notifications/i }),
+  ).toBeAttached()
+})
+
 // Passes locally but reliably fails on GitHub Actions ubuntu-latest —
-// see #9 for diagnosis and fix candidates.
+// see #9 for diagnosis and fix candidates. Doubly blocked in CI right now
+// because the form is replaced by the "Backend not configured" notice when
+// VITE_CONVEX_URL is missing.
 test.fixme('add subscription form validates the URL field', async ({
   page,
 }) => {
