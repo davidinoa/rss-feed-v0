@@ -41,41 +41,28 @@ items off as you finish them; add new ones as integrations grow.
 
 ### Clerk
 
-- [x] Create an app at [clerk.com](https://clerk.com) and set
-      `VITE_CLERK_PUBLISHABLE_KEY` in `.env.local`
-- [x] Migrate `@clerk/clerk-react` (deprecated, warns on install) →
-      `@clerk/react`
-- [ ] When it leaves beta: switch to `@clerk/tanstack-react-start` for
-      server-side `auth()` and `clerkMiddleware` — see
+- [ ] Switch to `@clerk/tanstack-react-start` (now GA on `latest`, no
+      longer beta) for server-side `auth()` and `clerkMiddleware` — revisit
       [ADR-0001](docs/adr/0001-clerk-react-not-tanstack-react-start.md)
-      for the deferral rationale and revisit triggers
+      and update it if the trade-offs still favour staying on `@clerk/react`
 - [ ] Production: swap test keys for production keys, configure the
       production domain, and enable any social providers (Google, GitHub, …)
 
 ### Convex
 
-- [x] Run `pnpm convex:dev` to provision a deployment (auto-writes
-      `VITE_CONVEX_URL` to `.env.local`, generates `convex/_generated/`)
-- [x] In Clerk dashboard: create a JWT template named `convex`, copy the
-      issuer URL
-- [x] In Convex dashboard: set `CLERK_JWT_ISSUER_DOMAIN` to that issuer URL,
-      then restart `pnpm convex:dev`
 - [ ] Migrate `/feeds`, `/timeline`, `/feeds/add` from mock
       `src/lib/feeds.ts` to `convexQuery(api.feeds.list, …)` /
       `useMutation(api.feeds.add)` (pattern in the Convex section below)
 - [ ] Retire `src/lib/feeds.ts` once routes are migrated (or repurpose as
       seed data)
-- [ ] Set the `CONVEX_DEPLOY_KEY` repo secret so the `convex-deploy` CI
-      job can run on pushes to `main` (workflow is already wired up;
-      see `.github/workflows/ci.yml` and [#7](https://github.com/davidinoa/rss-feed-v0/issues/7))
+- [ ] Wire up a `convex-deploy` job in `.github/workflows/ci.yml` that
+      runs `pnpm convex:deploy` on pushes to `main`, then set the
+      `CONVEX_DEPLOY_KEY` repo secret so it can authenticate
+      (tracked in [#7](https://github.com/davidinoa/rss-feed-v0/issues/7))
 
 ### Cloudflare Workers
 
 - [ ] Per machine: `pnpm dlx wrangler login`
-- [x] Set `VITE_*` vars as **Cloudflare Build variables**
-      (dashboard → Settings → Build → *Build variables and secrets*) —
-      NOT `wrangler secret put`, which is runtime-only and won't reach
-      `vite build`. See `docs/deploy.md` for the full gotcha.
 - [ ] Configure custom domain under Workers → your worker → Triggers
 - [ ] Disable public `*.workers.dev` URL once a custom domain is live:
       add `"workers_dev": false` and `"preview_urls": false` to
@@ -83,44 +70,10 @@ items off as you finish them; add new ones as integrations grow.
 - [ ] After binding changes (KV / D1 / R2 / Durable Objects / Queues):
       `pnpm cf-typegen`
 
-### CodeRabbit
-
-- [x] Push the repo to GitHub
-- [x] Make the repo public so the free tier's PR review quota applies
-      (free is public-repo only; private repos need a paid plan)
-- [x] Install the [CodeRabbit GitHub App](https://github.com/apps/coderabbitai)
-      on the repo or org
-- [ ] Tune `.coderabbit.yaml` `path_instructions` as the codebase grows
-      (tracked in [#11](https://github.com/davidinoa/rss-feed-v0/issues/11))
-
-### Playwright
-
-- [x] Per machine: `pnpm dlx playwright install chromium`
-      (CI handles this automatically in the `e2e` job)
-- [x] Smoke specs cover home / timeline / feeds / add-feed-validation;
-      expanding alongside new routes is normal dev work, not a tracked todo
-
-### Vitest
-
-- [x] Baseline spec in `src/lib/feeds.test.ts`; further unit coverage
-      grows alongside new components and helpers, not a tracked todo
-
 ### TanStack
 
 - [ ] Pin the `"latest"` versions in `package.json` to fixed semver before
       shipping (supply chain hygiene)
-- [x] Run `pnpm intent:stale` as a CI check so library skills stay in
-      sync with their source docs (in `.github/workflows/ci.yml`)
-
-### CI
-
-- [x] GitHub Actions workflow at `.github/workflows/ci.yml` runs
-      `pnpm install --frozen-lockfile`, `pnpm lint`, `pnpm format:check`,
-      `pnpm test`, `pnpm test:e2e`, `pnpm intent:stale` on every PR
-      and push, plus `pnpm convex:deploy` on pushes to `main` (gated on
-      the `CONVEX_DEPLOY_KEY` secret — see the Convex follow-up above).
-- [x] `commit-msg` hook + commitlint CI workflow gate Conventional
-      Commits locally and on PR / push to `main`
 
 ## Project tour
 
@@ -294,9 +247,10 @@ Active config (`.coderabbit.yaml`):
 - **Auto-review**: enabled for PRs into `main` (drafts excluded).
 - **Path filters**: skips generated files (`*.gen.ts`, `routeTree.gen.ts`),
   lockfiles, and build output (`.wrangler/`, `.output/`, `dist/`).
-- **Path instructions**: targeted rules for `src/routes/**` (TanStack Router
-  patterns), `src/integrations/clerk/**`, and `wrangler.jsonc`. Refresh
-  tracked in [#11](https://github.com/davidinoa/rss-feed-v0/issues/11).
+- **Path instructions**: targeted rules for `src/routes/**` (TanStack
+  Router patterns), `src/integrations/clerk/**`, `convex/**/*.ts`,
+  `wrangler.jsonc`, test files (Vitest + Playwright), `.github/workflows/**`,
+  and `.husky/**`.
 
 ### Free tier limits
 
