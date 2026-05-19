@@ -31,6 +31,14 @@ The component lands at `src/components/ui/<name>.tsx`. Review the diff for:
 - Tokens — the file should reference `bg-primary`, `text-foreground`, etc. Don't patch these; our `:root` + `.dark` blocks already provide the values.
 - Formatting — run `pnpm format` immediately; shadcn ships double quotes, our config uses single.
 
+**Every UI primitive ships as a trio**, enforced in CI by `pnpm check:ui`:
+
+1. `src/components/ui/<name>.tsx` — the component (the shadcn install gives you this).
+2. `src/components/ui/<name>.meta.ts` — machine-readable metadata. See [§ Component metadata for AI agents](#component-metadata-for-ai-agents) for the workflow.
+3. `src/components/ui/<name>.stories.tsx` — Storybook story. At minimum, one default story; ideally one story per visual state. Story-as-test runs axe-core a11y on every render, so missing this file silently drops a11y coverage for the component.
+
+If any of the three are missing, `pnpm check:ui` (run as part of the `Lint, format, test, intent:stale` CI job) fails the build with a punch list.
+
 ## File & folder conventions
 
 ```text

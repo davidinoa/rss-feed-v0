@@ -20,7 +20,7 @@ Single-context (one `CONTEXT.md` + `docs/adr/` at the repo root). See `docs/agen
 
 shadcn + Tailwind v4 + Storybook 10. Visual spec (palette, type scale, component design intent) in [`DESIGN.md`](DESIGN.md) at the repo root. Engineering reference (file naming, shadcn install, stories, dark mode, a11y) in [`docs/design-system.md`](docs/design-system.md). Read both once before your first UI PR.
 
-For new components, also produce a colocated `<name>.meta.ts` per [`docs/design-system.md` § Component metadata for AI agents](docs/design-system.md#component-metadata-for-ai-agents) — uses the `agentic-design-systems` + `ai-component-metadata` skill pair.
+When adding a UI primitive under `src/components/ui/`, ship **all three** — `<name>.tsx`, `<name>.meta.ts`, `<name>.stories.tsx`. `pnpm check:ui` enforces this in CI; missing any of the trio fails the build. The `.meta.ts` follows [`docs/design-system.md` § Component metadata for AI agents](docs/design-system.md#component-metadata-for-ai-agents) and uses the `agentic-design-systems` + `ai-component-metadata` skill pair.
 
 ## Deployment
 

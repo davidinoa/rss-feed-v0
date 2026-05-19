@@ -26,6 +26,9 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm lint
       - run: pnpm format:check
+      # Fast static check — every shadcn primitive in src/components/ui/
+      # must ship as .tsx + .meta.ts + .stories.tsx (see docs/design-system.md).
+      - run: pnpm check:ui
       # Storybook's vitest addon renders every story in headless Chromium.
       - run: pnpm exec playwright install chromium --with-deps
       - run: pnpm test
