@@ -63,6 +63,18 @@ export const meta: ComponentMeta = {
       description:
         'Additional Tailwind classes merged via cn(). Prefer variant/size over ad-hoc classes.',
     },
+    'aria-label': {
+      type: 'string',
+      required: false,
+      description:
+        "Inherited from HTMLButtonElement. Required when size='icon' and there is no visible text label (the blocksWhen rule and antiPatterns enforce this).",
+    },
+    'aria-labelledby': {
+      type: 'string',
+      required: false,
+      description:
+        'Inherited from HTMLButtonElement. ID of an element providing the accessible label; alternative to aria-label for icon-only buttons.',
+    },
   },
 
   variants: {
