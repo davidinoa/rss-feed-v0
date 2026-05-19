@@ -101,7 +101,7 @@ Two skills wire this up:
    ```sh
    python .agents/skills/ai-component-metadata/scripts/generate_metadata.py src/components/ui/<name>.tsx
    ```
-   Emits `<name>.meta.ts` with `component` / `props` / `variants.axes` filled and `// TODO` placeholders for the rest. Or copy [`metadata-template.ts`](../.agents/skills/ai-component-metadata/assets/metadata-template.ts) and adapt by hand.
+   Emits `<name>.meta.ts` with `component` / `props` / `variants.axes` filled and `// TODO` placeholders for the rest. Or copy [`metadata-template.ts`](../.agents/skills/ai-component-metadata/assets/metadata-template.ts) and adapt by hand. Run `pnpm format` afterwards — the scaffolder emits double quotes; oxfmt normalizes to single (same gotcha as a fresh shadcn install).
 3. Hand-fill `aiHints.usage.antiPatterns` first — the `{scenario, reason, alternative}` triples often reveal missing variants or relationships before they bite.
 4. Wire `meta.tokens` to this repo's tiered semantic tokens (`bg-primary`, `text-muted-foreground`, etc.) — the **semantic-palette** variant in [Token architecture variants](../.agents/skills/agentic-design-systems/SKILL.md#token-architecture-variants). State is carried by Tailwind opacity modifiers per [ADR-0003](adr/0003-tiered-color-tokens.md); don't invent `--<name>-state-*` tokens.
 
