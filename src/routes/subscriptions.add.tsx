@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Show, SignInButton } from '@clerk/react'
 import { useForm } from '@tanstack/react-form'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useAction } from 'convex/react'
@@ -8,6 +9,7 @@ import { z } from 'zod'
 import { api } from '../../convex/_generated/api'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
+import { isClerkConfigured } from '../integrations/clerk/provider'
 import { isConvexConfigured } from '../integrations/convex/provider'
 
 export const Route = createFileRoute('/subscriptions/add')({
@@ -33,8 +35,27 @@ function AddSubscription() {
         again later on the polling schedule.
       </p>
 
-      {isConvexConfigured ? <AddSubscriptionForm /> : <ConvexMissingNotice />}
+      {!isConvexConfigured ? <ConvexMissingNotice /> : <SubscribeShell />}
     </section>
+  )
+}
+
+function SubscribeShell() {
+  // When Clerk isn't configured at all (e.g. local dev without the key, or
+  // CI), there's no signed-in/out distinction — render the form and let the
+  // action's auth check surface its own error.
+  if (!isClerkConfigured) {
+    return <AddSubscriptionForm />
+  }
+  return (
+    <>
+      <Show when="signed-in">
+        <AddSubscriptionForm />
+      </Show>
+      <Show when="signed-out">
+        <SignedOutNotice />
+      </Show>
+    </>
   )
 }
 
@@ -139,6 +160,24 @@ function AddSubscriptionForm() {
         )}
       </form.Subscribe>
     </form>
+  )
+}
+
+function SignedOutNotice() {
+  return (
+    <div className="space-y-3">
+      <p className="text-muted-foreground text-sm">
+        Sign in to add subscriptions to your library.
+      </p>
+      <SignInButton mode="modal">
+        <button
+          type="button"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2.5 text-sm font-semibold transition"
+        >
+          Sign in
+        </button>
+      </SignInButton>
+    </div>
   )
 }
 
