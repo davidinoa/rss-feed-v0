@@ -128,8 +128,9 @@ function ProtectedPage() {
 
 For server-side auth (route loaders, server functions), you can upgrade to
 [`@clerk/tanstack-react-start`](https://www.npmjs.com/package/@clerk/tanstack-react-start)
-when it leaves beta — it ships `clerkMiddleware`, `createClerkHandler`, and
-server-side `auth()` helpers.
+(now GA) — it ships `clerkMiddleware`, `createClerkHandler`, and
+server-side `auth()` helpers. See [ADR-0001](docs/adr/0001-clerk-react-not-tanstack-react-start.md)
+for the original rationale for staying on `@clerk/react`.
 
 ## Backend (Convex)
 
@@ -247,10 +248,15 @@ Active config (`.coderabbit.yaml`):
 - **Auto-review**: enabled for PRs into `main` (drafts excluded).
 - **Path filters**: skips generated files (`*.gen.ts`, `routeTree.gen.ts`),
   lockfiles, and build output (`.wrangler/`, `.output/`, `dist/`).
-- **Path instructions**: targeted rules for `src/routes/**` (TanStack
-  Router patterns), `src/integrations/clerk/**`, `convex/**/*.ts`,
-  `wrangler.jsonc`, test files (Vitest + Playwright), `.github/workflows/**`,
-  and `.husky/**`.
+- **Path instructions**: targeted rules for
+  - `src/routes/**` (TanStack Router patterns)
+  - `src/integrations/clerk/**`
+  - `convex/**/*.ts`
+  - `wrangler.jsonc`
+  - `**/*.test.{ts,tsx}` (Vitest unit specs)
+  - `e2e/**/*.spec.ts` (Playwright e2e specs)
+  - `.github/workflows/**`
+  - `.husky/**`
 
 ### Free tier limits
 
