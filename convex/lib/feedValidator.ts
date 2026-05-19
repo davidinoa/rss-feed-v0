@@ -73,16 +73,24 @@ async function fetchWithTimeout(
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
   try {
-    // `redirect: 'follow'` (the default) follows up to ~20 redirects in spec;
-    // we don't have a portable way to cap at MAX_REDIRECTS without a custom
-    // dispatcher, so we trust the runtime cap and rely on the timeout as the
-    // backstop. The cap is documented in CONTEXT.md / PRD #54.
-    const res = await fetchFn(url, {
-      signal: controller.signal,
-      redirect: 'follow',
-    })
-    void MAX_REDIRECTS // referenced in the docstring above
-    return res
+    let currentUrl = url
+    for (let hop = 0; hop <= MAX_REDIRECTS; hop += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      const response = await fetchFn(currentUrl, {
+        signal: controller.signal,
+        redirect: 'manual',
+      })
+      const isRedirect = response.status >= 300 && response.status < 400
+      const location = response.headers.get('location')
+      if (!isRedirect || !location) {
+        return response
+      }
+      if (hop === MAX_REDIRECTS) {
+        throw new Error('too many redirects')
+      }
+      currentUrl = new URL(location, currentUrl).toString()
+    }
+    throw new Error('too many redirects')
   } finally {
     clearTimeout(timer)
   }

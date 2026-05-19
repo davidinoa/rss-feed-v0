@@ -184,6 +184,45 @@ describe('validateAndParseFeed — orchestration', () => {
       expect(result.error).toContain('size cap')
     }
   })
+
+  test('follows up to MAX_REDIRECTS (3) hops', async () => {
+    const chain = redirectChain([
+      'https://example.com/feed',
+      'https://example.com/v2/feed',
+      'https://example.com/v3/feed',
+      'https://final.example/feed.xml',
+    ])
+    const result = await validateAndParseFeed('https://example.com/feed', {
+      fetch: chain.fetch,
+    })
+    expect(result.ok).toBe(true)
+    if (result.ok) {
+      expect(result.finalUrl).toBe('https://final.example/feed.xml')
+    }
+    expect(chain.calls).toEqual([
+      'https://example.com/feed',
+      'https://example.com/v2/feed',
+      'https://example.com/v3/feed',
+      'https://final.example/feed.xml',
+    ])
+  })
+
+  test('rejects when a 4th redirect is requested', async () => {
+    const chain = redirectChain([
+      'https://example.com/a',
+      'https://example.com/b',
+      'https://example.com/c',
+      'https://example.com/d',
+      'https://example.com/e',
+    ])
+    const result = await validateAndParseFeed('https://example.com/a', {
+      fetch: chain.fetch,
+    })
+    expect(result.ok).toBe(false)
+    if (!result.ok) {
+      expect(result.error).toContain('too many redirects')
+    }
+  })
 })
 
 function mockResponse(
@@ -210,4 +249,32 @@ function mockResponse(
     Object.defineProperty(response, 'url', { value: url })
     return response
   }
+}
+
+function redirectChain(urls: Array<string>) {
+  const calls: Array<string> = []
+  const fetch = async (input: RequestInfo | URL): Promise<Response> => {
+    const requestedUrl =
+      typeof input === 'string'
+        ? input
+        : input instanceof URL
+          ? input.toString()
+          : input.url
+    calls.push(requestedUrl)
+    const index = urls.indexOf(requestedUrl)
+    if (index === -1) {
+      throw new Error(`Unexpected fetch to ${requestedUrl}`)
+    }
+    const isFinal = index === urls.length - 1
+    if (isFinal) {
+      const response = new Response(RSS_2_0, { status: 200 })
+      Object.defineProperty(response, 'url', { value: requestedUrl })
+      return response
+    }
+    return new Response(null, {
+      status: 301,
+      headers: { Location: urls[index + 1] },
+    })
+  }
+  return { fetch, calls }
 }

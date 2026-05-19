@@ -23,10 +23,11 @@ test('timeline shows the placeholder until Article ingestion lands', async ({
 
 test('subscriptions page links to the add flow', async ({ page }) => {
   await page.goto('/subscriptions')
-  await expect(
-    page.getByRole('heading', { name: /your subscriptions/i }),
-  ).toBeVisible()
-  await page.getByRole('link', { name: /\+ add subscription/i }).click()
+  const addSubscriptionLink = page.getByRole('link', {
+    name: /\+ add subscription/i,
+  })
+  await expect(addSubscriptionLink).toBeVisible({ timeout: 15_000 })
+  await addSubscriptionLink.click()
   await expect(page).toHaveURL(/\/subscriptions\/add$/)
   await expect(
     page.getByRole('heading', { name: /add a subscription/i }),

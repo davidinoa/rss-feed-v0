@@ -51,7 +51,7 @@ _Avoid_: Folder, Group, Tag.
 
 > **Dev:** "When a user adds a feed URL, do we always create a new **Source**?"
 > **Domain expert:** "No — if a **Source** already exists for that URL, we just create a new **Subscription** pointing at it. The fetch worker only polls each **Source** once."
-
+>
 > **Dev:** "If the user edits the title, where does that go?"
 > **Domain expert:** "On the **Subscription**. The **Source**'s title is whatever the RSS document advertises; the **Subscription** can override it."
 
