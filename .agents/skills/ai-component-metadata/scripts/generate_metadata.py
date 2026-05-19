@@ -39,8 +39,23 @@ def guess_category(name: str) -> str:
     return "atoms"
 
 
+ELEMENT_TYPES = {
+    "input": ("input", "textarea", "select"),
+    "interactive": ("button",),
+    "navigation": ("a",),
+}
+
+
 def guess_type(content: str, name: str) -> str:
     """Heuristic interactive/input/navigation/container/display classification from source."""
+    # `React.ComponentProps<'button'>` etc. — shadcn-style component composition.
+    m = re.search(r"React\.ComponentProps<\s*['\"](\w+)['\"]\s*>", content)
+    if m:
+        el = m.group(1)
+        for type_, elements in ELEMENT_TYPES.items():
+            if el in elements:
+                return type_
+    # Explicit prop-name signals.
     if re.search(r"\b(onChange|onInput|onBlur)\b|\bvalue\s*:", content):
         return "input"
     if re.search(r"\b(onClick|onPress|onActivate)\b", content):
@@ -91,7 +106,10 @@ def parse_variant_axes(content: str) -> dict[str, list[str]]:
         return axes
     for axis_match in re.finditer(r"(\w+)\s*:\s*\{([^}]+)\}", cva.group(1)):
         axis_name = axis_match.group(1)
-        values = re.findall(r"(\w+)\s*:", axis_match.group(2))
+        # Require a quote-character after the colon so we only capture
+        # `key: 'string'` pairs — not `hover:bg-primary/90` inside Tailwind
+        # class strings or `// CTA:` words inside comments.
+        values = re.findall(r"(\w+)\s*:\s*['\"`]", axis_match.group(2))
         if values:
             axes[axis_name] = values
     return axes
@@ -225,17 +243,34 @@ def main() -> None:
 
     content = src.read_text()
 
-    name_match = re.search(
-        r"export\s+(?:const|function|default\s+function)\s+(\w+)", content
-    )
-    if not name_match:
-        # Fallback: `export default Button;` (named identifier re-export).
-        name_match = re.search(r"export\s+default\s+(\w+)\s*;?", content)
-    if not name_match:
+    # Resolve the exported component name across the common export forms.
+    name: str | None = None
+
+    # Inline declaration: `export const/function/default function Foo`
+    m = re.search(r"export\s+(?:const|function|default\s+function)\s+(\w+)", content)
+    if m:
+        name = m.group(1)
+
+    # Default re-export: `export default Foo;`
+    if name is None:
+        m = re.search(r"export\s+default\s+(\w+)\s*;?", content)
+        if m:
+            name = m.group(1)
+
+    # Named-list re-export: `export { Foo, barUtil }` — pick the first
+    # PascalCase identifier (convention = the component; `buttonVariants`
+    # and similar helpers stay lowercase).
+    if name is None:
+        m = re.search(r"export\s*\{([^}]+)\}", content)
+        if m:
+            for token in re.findall(r"\b(\w+)\b", m.group(1)):
+                if token[:1].isupper():
+                    name = token
+                    break
+
+    if name is None:
         print(f"Error: could not find an exported component in {src}", file=sys.stderr)
         sys.exit(1)
-
-    name = name_match.group(1)
     category = guess_category(name)
     comp_type = guess_type(content, name)
     props = parse_props(content)
