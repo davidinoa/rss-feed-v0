@@ -7,7 +7,7 @@ fetch worker polls each Source once regardless of how many users subscribe.
 
 ## Considered options
 
-- **Single table with denormalised source fields and `userId`** (the original
+- **Single table with denormalized source fields and `userId`** (the original
   scaffold). Simpler today, but every additional subscriber to the same URL
   duplicates the polled-document metadata, and an eventual split is a migration
   touching schema + every query + UI labels.

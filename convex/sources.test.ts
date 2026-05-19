@@ -136,7 +136,7 @@ describe('sources.addByUrl', () => {
     ).rejects.toThrow(/already subscribed/i)
   })
 
-  test('canonicalises the input URL before dedup', async () => {
+  test('canonicalizes the input URL before dedup', async () => {
     const t = convexTest(schema, modules)
     const asAlice = t.withIdentity({ tokenIdentifier: 'alice' })
     const asBob = t.withIdentity({ tokenIdentifier: 'bob' })

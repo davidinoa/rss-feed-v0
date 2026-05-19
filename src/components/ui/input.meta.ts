@@ -88,12 +88,12 @@ export const meta: ComponentMeta = {
     color: {
       'border-input': 'Default hairline border.',
       'focus-visible:border-ring': 'Border swap on focus.',
-      'focus-visible:ring-ring/50': 'Focus ring colour.',
+      'focus-visible:ring-ring/50': 'Focus ring color.',
       'aria-invalid:border-destructive': 'Error-state border.',
       'aria-invalid:ring-destructive/20': 'Error-state focus ring.',
       'placeholder:text-muted-foreground': 'Placeholder text.',
       'selection:bg-primary selection:text-primary-foreground':
-        'Text-selection colours.',
+        'Text-selection colors.',
     },
     typography: {
       'text-base md:text-sm':

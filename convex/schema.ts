@@ -35,7 +35,7 @@ export default defineSchema({
     .index('by_user', ['userId'])
     .index('by_user_and_source', ['userId', 'sourceId']),
 
-  // Per-user bucket for organising Subscriptions. slug dedupes "AI" / "ai".
+  // Per-user bucket for organizing Subscriptions. slug dedupes "AI" / "ai".
   categories: defineTable({
     userId: v.string(),
     name: v.string(),

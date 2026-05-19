@@ -31,7 +31,7 @@ export const Route = createRootRouteWithContext<RouterContext>()({
       {
         name: 'description',
         content:
-          'Subscribe to blogs and news sources, organise your subscriptions into categories, and browse articles in a unified timeline.',
+          'Subscribe to blogs and news sources, organize your subscriptions into categories, and browse articles in a unified timeline.',
       },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],

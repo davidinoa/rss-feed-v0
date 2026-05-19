@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { canonicaliseUrl, InvalidUrlError } from './canonicalUrl'
+import { canonicalizeUrl, InvalidUrlError } from './canonicalUrl'
 
-describe('canonicaliseUrl — applied normalisations', () => {
+describe('canonicalizeUrl — applied normalizations', () => {
   test.each([
     // Lowercase host
     ['https://Example.COM/feed.xml', 'https://example.com/feed.xml'],
@@ -17,12 +17,12 @@ describe('canonicaliseUrl — applied normalisations', () => {
     ],
     // Identity for already-canonical input
     ['https://example.com/feed.xml', 'https://example.com/feed.xml'],
-  ])('canonicaliseUrl(%s) === %s', (input, expected) => {
-    expect(canonicaliseUrl(input)).toBe(expected)
+  ])('canonicalizeUrl(%s) === %s', (input, expected) => {
+    expect(canonicalizeUrl(input)).toBe(expected)
   })
 })
 
-describe('canonicaliseUrl — deliberately NOT normalised', () => {
+describe('canonicalizeUrl — deliberately NOT normalized', () => {
   test.each<[string, string]>([
     // Trailing slash kept — different routes can serve different content
     ['https://example.com/feed', 'https://example.com/feed'],
@@ -38,24 +38,24 @@ describe('canonicaliseUrl — deliberately NOT normalised', () => {
     ],
     // Non-default port kept (only :80 on http and :443 on https are stripped)
     ['https://example.com:8443/feed.xml', 'https://example.com:8443/feed.xml'],
-  ])('canonicaliseUrl preserves %s', (input, expected) => {
-    expect(canonicaliseUrl(input)).toBe(expected)
+  ])('canonicalizeUrl preserves %s', (input, expected) => {
+    expect(canonicalizeUrl(input)).toBe(expected)
   })
 
   test('two URLs that differ only by trailing slash remain distinct', () => {
-    expect(canonicaliseUrl('https://example.com/feed')).not.toBe(
-      canonicaliseUrl('https://example.com/feed/'),
+    expect(canonicalizeUrl('https://example.com/feed')).not.toBe(
+      canonicalizeUrl('https://example.com/feed/'),
     )
   })
 
   test('http and https variants of the same host stay distinct', () => {
-    expect(canonicaliseUrl('http://example.com/feed')).not.toBe(
-      canonicaliseUrl('https://example.com/feed'),
+    expect(canonicalizeUrl('http://example.com/feed')).not.toBe(
+      canonicalizeUrl('https://example.com/feed'),
     )
   })
 })
 
-describe('canonicaliseUrl — rejects invalid input', () => {
+describe('canonicalizeUrl — rejects invalid input', () => {
   test.each([
     '',
     'not a url',
@@ -64,6 +64,6 @@ describe('canonicaliseUrl — rejects invalid input', () => {
     'mailto:rss@example.com', // unsupported protocol
     'file:///etc/passwd', // unsupported protocol
   ])('throws InvalidUrlError on %s', (input) => {
-    expect(() => canonicaliseUrl(input)).toThrow(InvalidUrlError)
+    expect(() => canonicalizeUrl(input)).toThrow(InvalidUrlError)
   })
 })

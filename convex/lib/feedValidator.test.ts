@@ -164,7 +164,7 @@ describe('validateAndParseFeed — orchestration', () => {
     }
   })
 
-  test('returns error when body is not a recognised feed', async () => {
+  test('returns error when body is not a recognized feed', async () => {
     const result = await validateAndParseFeed('https://example.com/feed.xml', {
       fetch: mockResponse(NOT_A_FEED_XML),
     })

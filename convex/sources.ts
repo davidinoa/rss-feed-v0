@@ -2,12 +2,12 @@ import { v } from 'convex/values'
 import { action, internalMutation, internalQuery } from './_generated/server'
 import { internal } from './_generated/api'
 import type { Doc, Id } from './_generated/dataModel'
-import { canonicaliseUrl, InvalidUrlError } from './lib/canonicalUrl'
+import { canonicalizeUrl, InvalidUrlError } from './lib/canonicalUrl'
 import { validateAndParseFeed } from './lib/feedValidator'
 
 // Public action — the entry point of the add-Subscription flow.
 //
-// Pipeline: canonicalise → look up existing Source → if known, short-circuit
+// Pipeline: canonicalize → look up existing Source → if known, short-circuit
 // the fetch; if not, fetch + parse → write Source (if missing) and the new
 // Subscription in one transaction.
 //
@@ -23,7 +23,7 @@ export const addByUrl = action({
 
     let canonical: string
     try {
-      canonical = canonicaliseUrl(args.url)
+      canonical = canonicalizeUrl(args.url)
     } catch (err) {
       if (err instanceof InvalidUrlError) {
         throw new Error('Not a valid URL', { cause: err })
@@ -52,7 +52,7 @@ export const addByUrl = action({
 
     let finalCanonical: string
     try {
-      finalCanonical = canonicaliseUrl(result.finalUrl)
+      finalCanonical = canonicalizeUrl(result.finalUrl)
     } catch {
       finalCanonical = canonical
     }
