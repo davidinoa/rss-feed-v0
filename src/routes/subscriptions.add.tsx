@@ -71,6 +71,14 @@ function AddSubscriptionForm() {
       try {
         await addByUrl({ url: value.url })
         toast.success('Subscribed')
+        // Sonner mounts the toast via setTimeout(0) + flushSync, then sets
+        // `data-mounted=true` in a follow-up useEffect. If we navigate
+        // synchronously the route transition wins the race and the toast
+        // never enters its visible state. Yield one animation frame so the
+        // mount effect commits before the route changes.
+        await new Promise((resolve) =>
+          requestAnimationFrame(() => resolve(null)),
+        )
         navigate({ to: '/subscriptions' })
       } catch (err) {
         const message =
