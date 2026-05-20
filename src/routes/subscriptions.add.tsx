@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { type ChangeEvent, type FormEvent, useState } from 'react'
 import { Show } from '@clerk/react'
 import { useForm } from '@tanstack/react-form'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
@@ -77,25 +77,28 @@ function AddSubscriptionForm() {
     },
   })
 
+  function handleFormSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    form.handleSubmit()
+  }
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        form.handleSubmit()
-      }}
-      className="space-y-4"
-    >
+    <form onSubmit={handleFormSubmit} className="space-y-4">
       <form.Field
         name="url"
         validators={{ onChange: urlSchema, onBlur: urlSchema }}
       >
         {(field) => {
+          function handleUrlChange(event: ChangeEvent<HTMLInputElement>) {
+            field.handleChange(event.target.value)
+          }
           const errorId = 'url-error'
           const firstError = field.state.meta.errors[0]
           const errorMessage =
             typeof firstError === 'string'
               ? firstError
               : (firstError as { message?: string } | undefined)?.message
+          const hasError = !field.state.meta.isValid && Boolean(errorMessage)
           return (
             <div className="space-y-1">
               <Label htmlFor={field.name}>URL</Label>
@@ -108,15 +111,11 @@ function AddSubscriptionForm() {
                 placeholder="https://example.com/feed.xml"
                 value={field.state.value}
                 onBlur={field.handleBlur}
-                onChange={(e) => field.handleChange(e.target.value)}
-                aria-invalid={!field.state.meta.isValid || undefined}
-                aria-describedby={
-                  !field.state.meta.isValid && errorMessage
-                    ? errorId
-                    : undefined
-                }
+                onChange={handleUrlChange}
+                aria-invalid={hasError || undefined}
+                aria-describedby={hasError ? errorId : undefined}
               />
-              {!field.state.meta.isValid && errorMessage && (
+              {hasError && (
                 <p
                   id={errorId}
                   role="alert"
