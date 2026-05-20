@@ -34,18 +34,15 @@ test('subscriptions page links to the add flow', async ({ page }) => {
   ).toBeVisible()
 })
 
-test('subscriptions page shows a secondary state when there is nothing to read', async ({
+test('subscriptions page prompts unauthenticated visitors to sign in', async ({
   page,
 }) => {
-  // The exact copy depends on whether VITE_CONVEX_URL is wired up:
-  //   - configured: empty-state ("You haven't subscribed to anything yet.")
-  //   - unconfigured (e.g. CI without Convex): fallback notice
-  //     ("Backend not configured. Run pnpm convex:dev…")
-  // The shell renders one of the two — asserting either catches a regression
-  // that removes both.
+  // Clerk + Convex are required (see CLAUDE.md / docs/deploy.md). Playwright
+  // visits the page without a session, so /subscriptions shows the
+  // SignedOutNotice composed by the route.
   await page.goto('/subscriptions')
   await expect(
-    page.getByText(/(haven['’]t subscribed|backend not configured)/i),
+    page.getByText(/sign in to see your subscriptions/i),
   ).toBeVisible({ timeout: 15_000 })
 })
 
@@ -69,9 +66,9 @@ test('Sonner toast region is mounted at the app root', async ({ page }) => {
 })
 
 // Passes locally but reliably fails on GitHub Actions ubuntu-latest —
-// see #9 for diagnosis and fix candidates. Doubly blocked in CI right now
-// because the form is replaced by the "Backend not configured" notice when
-// VITE_CONVEX_URL is missing.
+// see #9 for diagnosis and fix candidates. The form is also behind
+// sign-in now (Clerk required), so the test needs an authenticated
+// fixture before it can run on CI; tracked alongside #9.
 test.fixme('add subscription form validates the URL field', async ({
   page,
 }) => {

@@ -60,11 +60,13 @@ Use `useForm` from `@tanstack/react-form`. Validators go on the field via
 ### Auth
 
 - The Clerk provider wraps the tree in `src/routes/__root.tsx`.
-- For client UI gating, use `<SignedIn>` / `<SignedOut>` from `@clerk/clerk-react`.
-- For protected routes, wrap with `<SignedIn>` and `<RedirectToSignIn />` in `<SignedOut>`.
-- The provider gracefully no-ops in dev when `VITE_CLERK_PUBLISHABLE_KEY` is
-  missing, and throws in production. Check `isClerkConfigured` before using
-  Clerk hooks if rendering is optional.
+- For client UI gating, use `<Show when="signed-in">` / `<Show when="signed-out">`
+  from `@clerk/react`.
+- For protected routes, wrap with `<Show when="signed-in">` and a
+  `<RedirectToSignIn />` inside `<Show when="signed-out">`.
+- `VITE_CLERK_PUBLISHABLE_KEY` is **required in every environment** — the
+  provider throws at boot when it's missing. There is no fallback / no-op
+  mode. Same rule applies to `VITE_CONVEX_URL` for the Convex provider.
 
 ### Cloudflare
 

@@ -9,10 +9,16 @@ import { z } from 'zod'
 import { api } from '../../convex/_generated/api'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
-import { ConvexMissingNotice } from '../components/states/convex-missing-notice'
 import { SignedOutNotice } from '../components/states/signed-out-notice'
-import { isClerkConfigured } from '../integrations/clerk/provider'
-import { isConvexConfigured } from '../integrations/convex/provider'
+
+export const Route = createFileRoute('/subscriptions/add')({
+  component: AddSubscription,
+})
+
+const urlSchema = z
+  .string()
+  .min(1, 'Paste an RSS or Atom URL.')
+  .url('That doesn’t look like a URL.')
 
 const signInAction = (
   <SignInButton mode="modal">
@@ -24,15 +30,6 @@ const signInAction = (
     </button>
   </SignInButton>
 )
-
-export const Route = createFileRoute('/subscriptions/add')({
-  component: AddSubscription,
-})
-
-const urlSchema = z
-  .string()
-  .min(1, 'Paste an RSS or Atom URL.')
-  .url('That doesn’t look like a URL.')
 
 function AddSubscription() {
   return (
@@ -48,20 +45,6 @@ function AddSubscription() {
         again later on the polling schedule.
       </p>
 
-      {!isConvexConfigured ? <ConvexMissingNotice /> : <SubscribeShell />}
-    </section>
-  )
-}
-
-function SubscribeShell() {
-  // When Clerk isn't configured at all (e.g. local dev without the key, or
-  // CI), there's no signed-in/out distinction — render the form and let the
-  // action's auth check surface its own error.
-  if (!isClerkConfigured) {
-    return <AddSubscriptionForm />
-  }
-  return (
-    <>
       <Show when="signed-in">
         <AddSubscriptionForm />
       </Show>
@@ -70,7 +53,7 @@ function SubscribeShell() {
           Sign in to add subscriptions to your library.
         </SignedOutNotice>
       </Show>
-    </>
+    </section>
   )
 }
 

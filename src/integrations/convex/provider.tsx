@@ -1,39 +1,32 @@
 import { useAuth } from '@clerk/react'
-import { ConvexProvider, ConvexReactClient } from 'convex/react'
+import { ConvexReactClient } from 'convex/react'
 import { ConvexProviderWithClerk } from 'convex/react-clerk'
-import { isClerkConfigured } from '../clerk/provider'
 
-const CONVEX_URL = import.meta.env.VITE_CONVEX_URL ?? ''
+const CONVEX_URL = import.meta.env.VITE_CONVEX_URL
 
-export const isConvexConfigured = CONVEX_URL.length > 0
+if (!CONVEX_URL) {
+  throw new Error(
+    'VITE_CONVEX_URL is required. Vite inlines VITE_* vars at build time, ' +
+      'so this must be set as a BUILD-TIME variable.\n\n' +
+      '  Locally: run `pnpm convex:dev` once to provision a dev deployment ' +
+      '(it adds the URL to .env.local automatically).\n' +
+      '  Cloudflare Workers: dashboard → Workers & Pages → <worker> → ' +
+      'Settings → Build → Variables and Secrets.\n' +
+      '  CI: configure as a GitHub Actions repository variable.\n\n' +
+      'See README § Backend (Convex) and docs/deploy.md.',
+  )
+}
 
-const convex = isConvexConfigured ? new ConvexReactClient(CONVEX_URL) : null
-
-let warned = false
+const convex = new ConvexReactClient(CONVEX_URL)
 
 export default function AppConvexProvider({
   children,
 }: {
   children: React.ReactNode
 }) {
-  if (!convex) {
-    if (import.meta.env.DEV && !warned) {
-      warned = true
-      console.warn(
-        '[Convex] VITE_CONVEX_URL is missing — backend queries are disabled. ' +
-          'Run `pnpm convex:dev` to provision a deployment.',
-      )
-    }
-    return <>{children}</>
-  }
-
-  if (isClerkConfigured) {
-    return (
-      <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-        {children}
-      </ConvexProviderWithClerk>
-    )
-  }
-
-  return <ConvexProvider client={convex}>{children}</ConvexProvider>
+  return (
+    <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
+      {children}
+    </ConvexProviderWithClerk>
+  )
 }

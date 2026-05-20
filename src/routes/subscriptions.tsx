@@ -2,10 +2,11 @@ import { Show, SignInButton } from '@clerk/react'
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
-import { ConvexMissingNotice } from '../components/states/convex-missing-notice'
 import { SignedOutNotice } from '../components/states/signed-out-notice'
-import { isClerkConfigured } from '../integrations/clerk/provider'
-import { isConvexConfigured } from '../integrations/convex/provider'
+
+export const Route = createFileRoute('/subscriptions')({
+  component: SubscriptionsLayout,
+})
 
 const signInAction = (
   <SignInButton mode="modal">
@@ -17,10 +18,6 @@ const signInAction = (
     </button>
   </SignInButton>
 )
-
-export const Route = createFileRoute('/subscriptions')({
-  component: SubscriptionsLayout,
-})
 
 function SubscriptionsLayout() {
   return (
@@ -42,21 +39,6 @@ function SubscriptionsLayout() {
         </Link>
       </header>
 
-      {!isConvexConfigured ? <ConvexMissingNotice /> : <ListShell />}
-
-      <Outlet />
-    </main>
-  )
-}
-
-function ListShell() {
-  if (!isClerkConfigured) {
-    // No auth at all — query returns [] and the empty-state copy carries
-    // the page. Same behaviour the scaffold had with mock data.
-    return <SubscriptionsList />
-  }
-  return (
-    <>
       <Show when="signed-in">
         <SubscriptionsList />
       </Show>
@@ -65,7 +47,9 @@ function ListShell() {
           Sign in to see your subscriptions.
         </SignedOutNotice>
       </Show>
-    </>
+
+      <Outlet />
+    </main>
   )
 }
 

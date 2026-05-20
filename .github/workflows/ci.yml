@@ -16,6 +16,12 @@ jobs:
   checks:
     name: Lint, format, test, intent:stale
     runs-on: ubuntu-latest
+    # Both VITE_* vars are required at app boot — providers hard-fail
+    # without them. Storybook's vitest addon boots Vite which inlines
+    # them, so they have to be present here too.
+    env:
+      VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
+      VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -37,6 +43,11 @@ jobs:
   e2e:
     name: Playwright e2e
     runs-on: ubuntu-latest
+    # The dev server boots the full app; Clerk + Convex providers throw
+    # at module init when these are missing.
+    env:
+      VITE_CLERK_PUBLISHABLE_KEY: ${{ vars.VITE_CLERK_PUBLISHABLE_KEY }}
+      VITE_CONVEX_URL: ${{ vars.VITE_CONVEX_URL }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

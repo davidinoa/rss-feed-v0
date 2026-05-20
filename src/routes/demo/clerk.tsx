@@ -1,46 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { SignIn, Show, useUser } from '@clerk/react'
-import { isClerkConfigured } from '../../integrations/clerk/provider'
 
 export const Route = createFileRoute('/demo/clerk')({
   component: ClerkDemo,
 })
 
 function ClerkDemo() {
-  if (!isClerkConfigured) {
-    return (
-      <div className="flex justify-center px-4 py-10">
-        <div className="border-border bg-card w-full max-w-md space-y-3 rounded-2xl border p-6 shadow-sm">
-          <p className="text-muted-foreground text-xs font-bold uppercase tracking-widest">
-            Clerk demo
-          </p>
-          <h1 className="text-foreground text-lg font-semibold">
-            Authentication is not configured yet
-          </h1>
-          <p className="text-muted-foreground text-sm">
-            Add your Clerk publishable key to <code>.env.local</code> and
-            restart the dev server:
-          </p>
-          <pre className="border-border bg-secondary rounded-lg border p-3 text-xs">
-            {`VITE_CLERK_PUBLISHABLE_KEY=pk_test_...`}
-          </pre>
-          <p className="text-muted-foreground text-xs">
-            Get a key from{' '}
-            <a
-              href="https://dashboard.clerk.com"
-              target="_blank"
-              rel="noreferrer"
-              className="underline"
-            >
-              dashboard.clerk.com
-            </a>
-            .
-          </p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="flex justify-center px-4 py-10">
       <div className="w-full max-w-md space-y-6 p-6">

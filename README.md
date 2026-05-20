@@ -28,11 +28,17 @@ timeline.
 
 ```bash
 pnpm install
-cp .env.example .env.local   # then fill in VITE_CLERK_PUBLISHABLE_KEY
+cp .env.example .env.local
+# Fill in BOTH required vars in .env.local before booting:
+#   - VITE_CLERK_PUBLISHABLE_KEY  (from https://dashboard.clerk.com → API keys)
+#   - VITE_CONVEX_URL             (auto-populated by `pnpm convex:dev`)
+pnpm convex:dev   # one-time: provisions a Convex deployment, writes the URL
 pnpm dev
 ```
 
-The app boots at <http://localhost:3000>.
+The app boots at <http://localhost:3000>. Both vars are **required at boot** —
+the app fails fast at the provider on either missing key. There's no
+"degraded" mode.
 
 ## Follow-ups
 
