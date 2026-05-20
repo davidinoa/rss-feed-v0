@@ -18,6 +18,7 @@
     "lint:fix": "oxlint --fix",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
+    "check:ui": "node scripts/check-ui-trio.mjs",
     "deploy": "pnpm build && wrangler deploy",
     "cf-typegen": "wrangler types",
     "convex:dev": "convex-bundled dev",
