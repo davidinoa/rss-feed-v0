@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Show, SignInButton } from '@clerk/react'
+import { Show } from '@clerk/react'
 import { useForm } from '@tanstack/react-form'
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useAction } from 'convex/react'
@@ -10,6 +10,7 @@ import { api } from '../../convex/_generated/api'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
 import { SignedOutNotice } from '../components/states/signed-out-notice'
+import { SignInAction } from '../integrations/clerk/sign-in-action'
 
 export const Route = createFileRoute('/subscriptions/add')({
   component: AddSubscription,
@@ -19,17 +20,6 @@ const urlSchema = z
   .string()
   .min(1, 'Paste an RSS or Atom URL.')
   .url('That doesn’t look like a URL.')
-
-const signInAction = (
-  <SignInButton mode="modal">
-    <button
-      type="button"
-      className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2.5 text-sm font-semibold transition"
-    >
-      Sign in
-    </button>
-  </SignInButton>
-)
 
 function AddSubscription() {
   return (
@@ -49,7 +39,7 @@ function AddSubscription() {
         <AddSubscriptionForm />
       </Show>
       <Show when="signed-out">
-        <SignedOutNotice action={signInAction}>
+        <SignedOutNotice action={<SignInAction />}>
           Sign in to add subscriptions to your library.
         </SignedOutNotice>
       </Show>
