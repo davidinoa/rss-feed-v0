@@ -9,8 +9,21 @@ import { z } from 'zod'
 import { api } from '../../convex/_generated/api'
 import { Input } from '#/components/ui/input'
 import { Label } from '#/components/ui/label'
+import { ConvexMissingNotice } from '../components/states/convex-missing-notice'
+import { SignedOutNotice } from '../components/states/signed-out-notice'
 import { isClerkConfigured } from '../integrations/clerk/provider'
 import { isConvexConfigured } from '../integrations/convex/provider'
+
+const signInAction = (
+  <SignInButton mode="modal">
+    <button
+      type="button"
+      className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2.5 text-sm font-semibold transition"
+    >
+      Sign in
+    </button>
+  </SignInButton>
+)
 
 export const Route = createFileRoute('/subscriptions/add')({
   component: AddSubscription,
@@ -53,7 +66,9 @@ function SubscribeShell() {
         <AddSubscriptionForm />
       </Show>
       <Show when="signed-out">
-        <SignedOutNotice />
+        <SignedOutNotice action={signInAction}>
+          Sign in to add subscriptions to your library.
+        </SignedOutNotice>
       </Show>
     </>
   )
@@ -168,32 +183,5 @@ function AddSubscriptionForm() {
         )}
       </form.Subscribe>
     </form>
-  )
-}
-
-function SignedOutNotice() {
-  return (
-    <div className="space-y-3">
-      <p className="text-muted-foreground text-sm">
-        Sign in to add subscriptions to your library.
-      </p>
-      <SignInButton mode="modal">
-        <button
-          type="button"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2.5 text-sm font-semibold transition"
-        >
-          Sign in
-        </button>
-      </SignInButton>
-    </div>
-  )
-}
-
-function ConvexMissingNotice() {
-  return (
-    <p className="text-muted-foreground text-sm">
-      Backend not configured. Run <code>pnpm convex:dev</code> to provision a
-      deployment, then refresh.
-    </p>
   )
 }

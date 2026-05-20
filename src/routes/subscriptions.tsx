@@ -2,8 +2,21 @@ import { Show, SignInButton } from '@clerk/react'
 import { Link, Outlet, createFileRoute } from '@tanstack/react-router'
 import { useQuery } from 'convex/react'
 import { api } from '../../convex/_generated/api'
+import { ConvexMissingNotice } from '../components/states/convex-missing-notice'
+import { SignedOutNotice } from '../components/states/signed-out-notice'
 import { isClerkConfigured } from '../integrations/clerk/provider'
 import { isConvexConfigured } from '../integrations/convex/provider'
+
+const signInAction = (
+  <SignInButton mode="modal">
+    <button
+      type="button"
+      className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2.5 text-sm font-semibold transition"
+    >
+      Sign in
+    </button>
+  </SignInButton>
+)
 
 export const Route = createFileRoute('/subscriptions')({
   component: SubscriptionsLayout,
@@ -48,27 +61,11 @@ function ListShell() {
         <SubscriptionsList />
       </Show>
       <Show when="signed-out">
-        <SignedOutNotice />
+        <SignedOutNotice action={signInAction}>
+          Sign in to see your subscriptions.
+        </SignedOutNotice>
       </Show>
     </>
-  )
-}
-
-function SignedOutNotice() {
-  return (
-    <div className="space-y-3">
-      <p className="text-muted-foreground text-sm">
-        Sign in to see your subscriptions.
-      </p>
-      <SignInButton mode="modal">
-        <button
-          type="button"
-          className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-2.5 text-sm font-semibold transition"
-        >
-          Sign in
-        </button>
-      </SignInButton>
-    </div>
   )
 }
 
@@ -104,14 +101,5 @@ function SubscriptionsList() {
         )
       })}
     </ul>
-  )
-}
-
-function ConvexMissingNotice() {
-  return (
-    <p className="text-muted-foreground text-sm">
-      Backend not configured. Run <code>pnpm convex:dev</code> to provision a
-      deployment, then refresh.
-    </p>
   )
 }
