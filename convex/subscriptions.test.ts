@@ -89,6 +89,7 @@ describe('subscriptions.list', () => {
         url: 'https://example.com/feed.xml',
         title: 'Example',
         subscriberCount: 1,
+        lastFetchedAt: 123,
         description: 'should be hidden in slice 1',
       })
       await ctx.db.insert('subscriptions', {
@@ -106,6 +107,7 @@ describe('subscriptions.list', () => {
       url: 'https://example.com/feed.xml',
       title: 'Example',
     })
+    expect(sub.source?.lastFetchedAt).toBeDefined()
     // description is NOT projected in slice 1 — slice 2 adds it
     expect((sub.source as Record<string, unknown>).description).toBeUndefined()
   })

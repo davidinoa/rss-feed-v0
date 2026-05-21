@@ -19,7 +19,7 @@ export const Route = createFileRoute('/subscriptions/add')({
 const urlSchema = z
   .string()
   .min(1, 'Paste an RSS or Atom URL.')
-  .url('That doesn’t look like a URL.')
+  .pipe(z.url('That doesn’t look like a URL.'))
 
 function AddSubscription() {
   return (

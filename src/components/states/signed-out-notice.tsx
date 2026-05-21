@@ -1,3 +1,5 @@
+import type { ReactNode } from 'react'
+
 /**
  * Presentational shell for "you need to sign in" prompts. The caller passes:
  *   - children: the contextual description ("Sign in to see your subscriptions.")
@@ -13,8 +15,8 @@ export function SignedOutNotice({
   children,
   action,
 }: {
-  children: React.ReactNode
-  action: React.ReactNode
+  children: ReactNode
+  action: ReactNode
 }) {
   return (
     <div className="space-y-3">
