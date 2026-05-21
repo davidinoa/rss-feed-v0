@@ -8,13 +8,13 @@ const FEATURES: Array<[string, string]> = [
     'Articles from every subscription, sorted newest first.',
   ],
   [
-    'Category folders',
-    'Group feeds by engineering, news, design, or anything you like.',
+    'Categories',
+    'Bucket your subscriptions into the labels that make sense to you.',
   ],
   ['Type-safe routing', 'TanStack Router keeps every link and loader in sync.'],
   [
     'Edge-hosted',
-    'Cloudflare Workers handles SSR and feed sync, close to your readers.',
+    'Cloudflare Workers handles SSR and source polling, close to your readers.',
   ],
 ]
 
@@ -41,10 +41,10 @@ function App() {
             Open timeline
           </Link>
           <Link
-            to="/feeds/add"
+            to="/subscriptions/add"
             className="border-border bg-card text-foreground hover:bg-accent rounded-full border px-5 py-2.5 text-sm font-semibold no-underline transition"
           >
-            Subscribe to a feed
+            Add a subscription
           </Link>
         </div>
       </section>
@@ -69,15 +69,16 @@ function App() {
         </p>
         <ul className="text-muted-foreground m-0 list-disc space-y-2 pl-5 text-sm">
           <li>
-            <code>/timeline</code> — TanStack Query loads articles via the route
-            loader and hydrates on the client.
+            <code>/timeline</code> — placeholder until Article ingestion lands.
           </li>
           <li>
-            <code>/feeds</code> — Suspense query lists subscriptions.
+            <code>/subscriptions</code> — Suspense query lists your follows of
+            each Source, scoped to your auth identity.
           </li>
           <li>
-            <code>/feeds/add</code> — TanStack Form handles validation and
-            submission.
+            <code>/subscriptions/add</code> — TanStack Form + Zod validate the
+            URL on the client, then a Convex action fetches and parses the feed
+            before any row is written.
           </li>
           <li>
             <code>/demo/clerk</code> — Clerk's prebuilt sign-in flow.

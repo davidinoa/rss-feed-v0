@@ -8,8 +8,11 @@
  * @module
  */
 
-import type * as articles from "../articles.js";
-import type * as feeds from "../feeds.js";
+import type * as categories from "../categories.js";
+import type * as lib_canonicalUrl from "../lib/canonicalUrl.js";
+import type * as lib_feedValidator from "../lib/feedValidator.js";
+import type * as sources from "../sources.js";
+import type * as subscriptions from "../subscriptions.js";
 
 import type {
   ApiFromModules,
@@ -18,8 +21,11 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  articles: typeof articles;
-  feeds: typeof feeds;
+  categories: typeof categories;
+  "lib/canonicalUrl": typeof lib_canonicalUrl;
+  "lib/feedValidator": typeof lib_feedValidator;
+  sources: typeof sources;
+  subscriptions: typeof subscriptions;
 }>;
 
 /**

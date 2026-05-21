@@ -73,6 +73,12 @@
       "skillPath": "skills/engineering/improve-codebase-architecture/SKILL.md",
       "computedHash": "c77b86b4332919499608f9af1880074e1fec65a59b95c70c27a9f39cd137865e"
     },
+    "modern-best-practice-react-components": {
+      "source": "academind/ai-config",
+      "sourceType": "github",
+      "skillPath": "skills/modern-best-practice-react-components/SKILL.md",
+      "computedHash": "a0e1c55fe447ea0bf4b6bb6561e78a99eb12dd73553d093bbbfffed3c1d03faf"
+    },
     "prototype": {
       "source": "mattpocock/skills",
       "sourceType": "github",
