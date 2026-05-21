@@ -3,7 +3,64 @@ import { action, internalMutation, internalQuery } from './_generated/server'
 import { internal } from './_generated/api'
 import type { Doc, Id } from './_generated/dataModel'
 import { canonicalizeUrl, InvalidUrlError } from './lib/canonicalUrl'
-import { validateAndParseFeed } from './lib/feedValidator'
+import {
+  validateAndParseFeed,
+  type ValidateErrorCode,
+  validateErrorCodes,
+} from './lib/feedValidator'
+
+const subscribeErrorByCode: Record<ValidateErrorCode, string> = {
+  [validateErrorCodes.fetchFailed]:
+    'Could not reach this URL. Try again in a moment.',
+  [validateErrorCodes.fetchTimedOut]:
+    'The URL took too long to respond. Try again in a moment.',
+  [validateErrorCodes.tooManyRedirects]:
+    'This URL redirects too many times. Try the final feed URL directly.',
+  [validateErrorCodes.httpError]:
+    'The server rejected the request. Verify the URL and try again.',
+  [validateErrorCodes.readFailed]:
+    'We could not read this URL. Verify the URL and try again.',
+  [validateErrorCodes.responseTooLarge]:
+    'This feed is too large to process.',
+  [validateErrorCodes.invalidFeed]:
+    'This URL does not appear to be a valid RSS or Atom feed.',
+}
+
+function toSubscribeErrorMessage(code: ValidateErrorCode): string {
+  return subscribeErrorByCode[code]
+}
+
+function parseHttpStatus(message: string): number | null {
+  const match = /^HTTP\s+(\d{3})$/.exec(message.trim())
+  if (!match) return null
+  return Number.parseInt(match[1], 10)
+}
+
+function toHttpSubscribeErrorMessage(message: string): string {
+  const status = parseHttpStatus(message)
+  if (status === 400) {
+    return 'Invalid request. Verify the URL and try again.'
+  }
+  if (status === 401) {
+    return 'Authentication required to access this feed.'
+  }
+  if (status === 403) {
+    return 'Access denied for this feed URL.'
+  }
+  if (status === 404) {
+    return 'Feed URL not found (404). Verify the URL and try again.'
+  }
+  if (status === 429) {
+    return 'Too many requests. Try again in a moment.'
+  }
+  if (status !== null && status >= 400 && status <= 499) {
+    return `The feed server returned ${status}. Verify the URL and try again.`
+  }
+  if (status !== null && status >= 500 && status <= 599) {
+    return 'The feed server is having issues right now. Try again in a moment.'
+  }
+  return toSubscribeErrorMessage(validateErrorCodes.httpError)
+}
 
 // Public action — the entry point of the add-Subscription flow.
 //
@@ -11,8 +68,7 @@ import { validateAndParseFeed } from './lib/feedValidator'
 // the fetch; if not, fetch + parse → write Source (if missing) and the new
 // Subscription in one transaction.
 //
-// Slice #55 returns a generic Error string on failure; slice #57 swaps this
-// for a typed error enum.
+// Validation failures include typed error codes from feedValidator.
 export const addByUrl = action({
   args: { url: v.string() },
   handler: async (ctx, args): Promise<Id<'subscriptions'>> => {
@@ -47,7 +103,11 @@ export const addByUrl = action({
 
     const result = await validateAndParseFeed(canonical)
     if (!result.ok) {
-      throw new Error(`Could not subscribe: ${result.error}`)
+      const message =
+        result.error.code === validateErrorCodes.httpError
+          ? toHttpSubscribeErrorMessage(result.error.message)
+          : toSubscribeErrorMessage(result.error.code)
+      throw new Error(`Could not subscribe: ${message}`)
     }
 
     let finalCanonical: string

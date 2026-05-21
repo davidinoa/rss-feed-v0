@@ -1,6 +1,9 @@
 // Feed validator — fetches a URL, parses the body as RSS or Atom, returns the
 // title and the newest entry's publish date.
 //
+// Terminology note: "feed" here is protocol language (RSS/Atom feed document),
+// not a domain entity. In app/domain code, prefer Source and Subscription.
+//
 // Slice #55 scope: happy-path only. No HTML discovery (slice #57), no typed
 // error-code enum (slice #57), no description/icon/site-URL extraction
 // (slice #56). Failures collapse into a single generic Error.
@@ -14,9 +17,27 @@ export type ParsedFeed = {
   lastPublishedAt: number | null
 }
 
+export const validateErrorCodes = {
+  fetchFailed: 'fetch_failed',
+  fetchTimedOut: 'fetch_timed_out',
+  tooManyRedirects: 'too_many_redirects',
+  httpError: 'http_error',
+  readFailed: 'read_failed',
+  responseTooLarge: 'response_too_large',
+  invalidFeed: 'invalid_feed',
+} as const
+
+export type ValidateErrorCode =
+  (typeof validateErrorCodes)[keyof typeof validateErrorCodes]
+
+export type ValidateError = {
+  code: ValidateErrorCode
+  message: string
+}
+
 export type ValidateResult =
   | { ok: true; feed: ParsedFeed; finalUrl: string }
-  | { ok: false; error: string }
+  | { ok: false; error: ValidateError }
 
 const MAX_RESPONSE_BYTES = 5 * 1024 * 1024
 const FETCH_TIMEOUT_MS = 8_000
@@ -38,29 +59,26 @@ export async function validateAndParseFeed(
   try {
     response = await fetchWithTimeout(rawUrl, fetchFn)
   } catch (err) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : 'fetch failed',
-    }
+    return validationErrorFromException(err, validateErrorCodes.fetchFailed)
   }
 
   if (!response.ok) {
-    return { ok: false, error: `HTTP ${response.status}` }
+    return validationError(
+      validateErrorCodes.httpError,
+      `HTTP ${response.status}`,
+    )
   }
 
   let body: string
   try {
     body = await readBodyCapped(response, MAX_RESPONSE_BYTES)
   } catch (err) {
-    return {
-      ok: false,
-      error: err instanceof Error ? err.message : 'read failed',
-    }
+    return validationErrorFromException(err, validateErrorCodes.readFailed)
   }
 
   const parsed = parseFeed(body)
   if (!parsed) {
-    return { ok: false, error: 'not a valid feed' }
+    return validationError(validateErrorCodes.invalidFeed, 'not a valid feed')
   }
 
   return { ok: true, feed: parsed, finalUrl: response.url || rawUrl }
@@ -86,11 +104,31 @@ async function fetchWithTimeout(
         return response
       }
       if (hop === MAX_REDIRECTS) {
-        throw new Error('too many redirects')
+        throw new FeedValidationException(
+          validateErrorCodes.tooManyRedirects,
+          'too many redirects',
+        )
       }
       currentUrl = new URL(location, currentUrl).toString()
     }
-    throw new Error('too many redirects')
+    throw new FeedValidationException(
+      validateErrorCodes.tooManyRedirects,
+      'too many redirects',
+    )
+  } catch (err) {
+    if (err instanceof FeedValidationException) {
+      throw err
+    }
+    if (err instanceof Error && err.name === 'AbortError') {
+      throw new FeedValidationException(
+        validateErrorCodes.fetchTimedOut,
+        'request timed out',
+      )
+    }
+    throw new FeedValidationException(
+      validateErrorCodes.fetchFailed,
+      err instanceof Error ? err.message : 'fetch failed',
+    )
   } finally {
     clearTimeout(timer)
   }
@@ -106,7 +144,10 @@ async function readBodyCapped(
     // verify the byte length afterwards.
     const text = await response.text()
     if (new TextEncoder().encode(text).byteLength > maxBytes) {
-      throw new Error('response exceeds size cap')
+      throw new FeedValidationException(
+        validateErrorCodes.responseTooLarge,
+        'response exceeds size cap',
+      )
     }
     return text
   }
@@ -122,7 +163,10 @@ async function readBodyCapped(
     received += value.byteLength
     if (received > maxBytes) {
       reader.cancel().catch(() => {})
-      throw new Error('response exceeds size cap')
+      throw new FeedValidationException(
+        validateErrorCodes.responseTooLarge,
+        'response exceeds size cap',
+      )
     }
     chunks.push(value)
   }
@@ -228,4 +272,34 @@ function parseDate(input: string | undefined): number | null {
   if (!input) return null
   const ts = Date.parse(input)
   return Number.isFinite(ts) ? ts : null
+}
+
+class FeedValidationException extends Error {
+  constructor(
+    public readonly code: ValidateErrorCode,
+    message: string,
+  ) {
+    super(message)
+    this.name = 'FeedValidationException'
+  }
+}
+
+function validationError(
+  code: ValidateErrorCode,
+  message: string,
+): ValidateResult {
+  return { ok: false, error: { code, message } }
+}
+
+function validationErrorFromException(
+  err: unknown,
+  fallbackCode: ValidateErrorCode,
+): ValidateResult {
+  if (err instanceof FeedValidationException) {
+    return validationError(err.code, err.message)
+  }
+  return validationError(
+    fallbackCode,
+    err instanceof Error ? err.message : 'validation failed',
+  )
 }

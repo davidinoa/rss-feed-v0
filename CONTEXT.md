@@ -58,3 +58,9 @@ _Avoid_: Folder, Group, Tag.
 ## Flagged ambiguities
 
 - "Feed" was used to mean both **Source** and **Subscription** — resolved: split into two distinct terms. RSS/Atom spec uses "feed" for the source document; we avoid the word entirely in code and prose to prevent the dual meaning from creeping back. ([ADR-0005](docs/adr/0005-source-subscription-split.md))
+
+## Terminology exception
+
+- "Feed" is allowed only for protocol-level parsing or wire-format concerns
+  (for example RSS/Atom validators, parser helpers, and XML shape names).
+- For product/domain concepts, always use **Source** and **Subscription**.
