@@ -1,5 +1,9 @@
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { parseFeed, validateAndParseFeed } from './feedValidator'
+import {
+  parseFeed,
+  validateAndParseFeed,
+  validateErrorCodes,
+} from './feedValidator'
 
 const RSS_2_0 = `<?xml version="1.0"?>
 <rss version="2.0">
@@ -150,7 +154,8 @@ describe('validateAndParseFeed — orchestration', () => {
     })
     expect(result.ok).toBe(false)
     if (!result.ok) {
-      expect(result.error).toContain('404')
+      expect(result.error.code).toBe(validateErrorCodes.httpError)
+      expect(result.error.message).toContain('404')
     }
   })
 
@@ -160,7 +165,8 @@ describe('validateAndParseFeed — orchestration', () => {
     })
     expect(result.ok).toBe(false)
     if (!result.ok) {
-      expect(result.error).toBe('network down')
+      expect(result.error.code).toBe(validateErrorCodes.fetchFailed)
+      expect(result.error.message).toBe('network down')
     }
   })
 
@@ -170,7 +176,8 @@ describe('validateAndParseFeed — orchestration', () => {
     })
     expect(result.ok).toBe(false)
     if (!result.ok) {
-      expect(result.error).toBe('not a valid feed')
+      expect(result.error.code).toBe(validateErrorCodes.invalidFeed)
+      expect(result.error.message).toBe('not a valid feed')
     }
   })
 
@@ -181,7 +188,8 @@ describe('validateAndParseFeed — orchestration', () => {
     })
     expect(result.ok).toBe(false)
     if (!result.ok) {
-      expect(result.error).toContain('size cap')
+      expect(result.error.code).toBe(validateErrorCodes.responseTooLarge)
+      expect(result.error.message).toContain('size cap')
     }
   })
 
@@ -220,7 +228,8 @@ describe('validateAndParseFeed — orchestration', () => {
     })
     expect(result.ok).toBe(false)
     if (!result.ok) {
-      expect(result.error).toContain('too many redirects')
+      expect(result.error.code).toBe(validateErrorCodes.tooManyRedirects)
+      expect(result.error.message).toContain('too many redirects')
     }
   })
 
@@ -253,7 +262,8 @@ describe('validateAndParseFeed — orchestration', () => {
       const result = await resultPromise
       expect(result.ok).toBe(false)
       if (!result.ok) {
-        expect(result.error).toBe('aborted')
+        expect(result.error.code).toBe(validateErrorCodes.fetchFailed)
+        expect(result.error.message).toBe('aborted')
       }
       expect(seen).toHaveLength(1)
       expect(seen[0]?.aborted).toBe(true)

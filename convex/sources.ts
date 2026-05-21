@@ -20,8 +20,7 @@ const subscribeErrorByCode: Record<ValidateErrorCode, string> = {
     'The server rejected the request. Verify the URL and try again.',
   [validateErrorCodes.readFailed]:
     'We could not read this URL. Verify the URL and try again.',
-  [validateErrorCodes.responseTooLarge]:
-    'This feed is too large to process.',
+  [validateErrorCodes.responseTooLarge]: 'This feed is too large to process.',
   [validateErrorCodes.invalidFeed]:
     'This URL does not appear to be a valid RSS or Atom feed.',
 }
